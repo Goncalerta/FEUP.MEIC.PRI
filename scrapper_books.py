@@ -73,13 +73,13 @@ def fetch_book_txt(book_id):
     text = re.split(r'\*\*\*\s?START[^*]*\*\*\*\s', text, maxsplit=1)
     if len(text) != 2:
         print(
-            f"WARNING: Book {book_id} has no start of the project gutenberg ebook")
+            f"🚨 Book {book_id} has no start of the project gutenberg ebook")
 
     text = text[1]
     text = re.split(r'\*\*\*\s?END[^*]*\*\*\*\s', text, maxsplit=1)
     if len(text) != 2:
         print(
-            f"WARNING: Book {book_id} has no end of the project gutenberg ebook")
+            f"🚨 Book {book_id} has no end of the project gutenberg ebook")
 
     text = text[0]
     text = text.strip()
@@ -97,16 +97,16 @@ def parse_book_info_table(data):
     if 'Author' not in data:
         if 'Translator' in data:  # TODO should we do this?
             print(
-                f"WARNING: No author found for book {book_id}. Implicitely replacing with 'Translator' {data['Translator']}...")
+                f"🚨 No author found for book {book_id}. Implicitely replacing with 'Translator' {data['Translator']}...")
             data['Author'] = data['Translator']
 
     EXPECT_EXACTLY_ONE = ['Title', 'Language',
                           'Release Date', 'Copyright Status', 'EBook-No.']
     for key in EXPECT_EXACTLY_ONE:
         if key not in data or len(data[key]) == 0:
-            print(f"WARNING: No column '{key}' for book {book_id}")
+            print(f"🚨 No column '{key}' for book {book_id}")
         if len(data[key]) > 1:
-            print(f"WARNING: More than one column '{key}' for book {book_id}")
+            print(f"🚨 More than one column '{key}' for book {book_id}")
 
     if 'Subject' not in data:
         data['Subject'] = []
@@ -119,32 +119,32 @@ def parse_book_info_table(data):
 
     if book_id != data['EBook-No.'][0]['text']:
         print(
-            f"WARNING: Book ID mismatch for book {book_id}: {data['EBook-No.'][0]['text']}")
+            f"🚨 Book ID mismatch for book {book_id}: {data['EBook-No.'][0]['text']}")
 
     if data['Copyright Status'][0]['text'] != 'Public domain in the USA.':
         print(
-            f"WARNING: Unexpected copyright status for book {book_id}: {data['Copyright Status'][0]['text']}")
+            f"🚨 Unexpected copyright status for book {book_id}: {data['Copyright Status'][0]['text']}")
 
     def aux_parse_author(author):
         if author['href'] is None:
-            print(f"WARNING: No author ID for book {book_id}")
+            print(f"🚨 No author ID for book {book_id}")
 
         author_href_parts = author['href'].split('/')
         author_text_parts = author['text'].split(',')
 
         if len(author_href_parts) == 0:
             print(
-                f"WARNING: Invalid author ID for book {book_id}: {author_href_parts}")
+                f"🚨 Invalid author ID for book {book_id}: {author_href_parts}")
 
         if len(author_text_parts) == 2:
             print(
-                f"WARNING: Author is missing a first name {book_id}: {author_text_parts}")
+                f"🚨 Author is missing a first name {book_id}: {author_text_parts}")
             author_text_parts = [author_text_parts[0],
                                  None, author_text_parts[1]]
             author_text_parts[0] = author_text_parts[0].strip()
         elif len(author_text_parts) != 3:
             print(
-                f"WARNING: Invalid author name structure for book {book_id}: {author_text_parts}")
+                f"🚨 Invalid author name structure for book {book_id}: {author_text_parts}")
         else:
             author_text_parts[0] = author_text_parts[0].strip()
             author_text_parts[1] = author_text_parts[1].strip()
@@ -153,7 +153,7 @@ def parse_book_info_table(data):
         author_living_years = author_text_parts[2].split('-')
         if len(author_living_years) != 2:
             print(
-                f"WARNING: Invalid author living years structure for book {book_id}: {author_living_years}")
+                f"🚨 Invalid author living years structure for book {book_id}: {author_living_years}")
 
         return {
             'id': author_href_parts[-1],  # last part of the URL

@@ -49,7 +49,7 @@ def fetch_review(book_title, author_name):
     if (not table):
         new_book_title = book_title.split(':')[0]
         print(
-            f"WARNING: No review found for {book_title}. Trying {new_book_title}")
+            f"WARNING: No review found for '{book_title}'. Trying '{new_book_title}'")
         r = requests.get(
             f"https://www.goodreads.com/search?q={new_book_title.replace(' ', '+')}")
         soup = BeautifulSoup(r.text, 'html.parser')
@@ -73,29 +73,6 @@ def fetch_review(book_title, author_name):
         return hyperlinks[0]
 
     return None
-
-
-def retrieve_top_reviews(review_list, num_reviews):
-    print(review_list)
-    """top_reviews = review_list[0].find_all('article', class_='ReviewCard')
-    print(review_list)
-    for review in top_reviews:
-        review_author = review.find(
-            'div', class_='ReviewerProfile__name').find('a').text
-        review_content = review.find('div', class_='ReviewCard__content')
-        review_metadata = review_content.find('div', class_='ReviewCard__row')
-        review_rating = review_metadata.find(
-            'div', class_='ShelfStatus').find('span')['aria-label']
-        review_date = review_metadata.find(
-            'span', class_='Text Text__body3').find('a').text
-
-        yield {
-            review_author: review_author,
-            review_rating: review_rating,
-            review_date: review_date
-        }"""
-
-    return
 
 
 def switch_reviews_mode(driver, book_id, sort_order, rating=None):
@@ -182,7 +159,7 @@ def get_id(bookid):
     return pattern.search(bookid).group()
 
 
-def fetch_review_info(book_id, num_reviews=10):
+def fetch_review_info(book_id, num_reviews=10, num_attempts=15):
 
     community_reviews = None
     """for _ in range(10):
@@ -193,17 +170,18 @@ def fetch_review_info(book_id, num_reviews=10):
         if (community_reviews):
             break"""
 
-    driver = webdriver.Firefox()
+    driver = webdriver.Firefox(executable_path="C:\\Users\\up201906272\\Desktop\\geckodriver.exe")
     url = 'https://www.goodreads.com/book/show/' + book_id
     driver.get(url)
     reviews = []
+    
+    if num_attempts == 0: return reviews
+
     try:
         time.sleep(4)
 
         switch_reviews_mode(driver, book_id, 'default')
         time.sleep(2)
-
-        reviews = []
 
         # Pull the page source, load into BeautifulSoup, and find all review nodes.
         source = driver.page_source
@@ -214,36 +192,30 @@ def fetch_review_info(book_id, num_reviews=10):
         # Iterate through and parse the reviews.
         for node in nodes:
             review_id = re.search('[0-9]+', node['id']).group(0)
-            reviews.append({'book_id_title': book_id,
-                            'book_title': book_title,
-                            'review_url': f"https://www.goodreads.com/review/show/{review_id}",
-                            'review_id': review_id,
-                            'date': get_date(node),
+            reviews.append({'date': get_date(node),
                             'rating': get_rating(node),
                             'user_name': get_user_name(node),
-                            'user_url': get_user_url(node),
                             'text': get_text(node),
-                            'num_likes': get_num_likes(node),
-                            'shelves': get_shelves(node)})
+                            'num_likes': get_num_likes(node)})
             num_reviews = num_reviews - 1
             if (num_reviews <= 0):
                 break
 
     except ElementClickInterceptedException:
         print(f'🚨 ElementClickInterceptedException (Likely a pop-up)🚨\n🔄 Refreshing Goodreads site and rescraping book🔄')
-        reviews = fetch_review_info(book_id, num_reviews)
+        reviews = fetch_review_info(book_id, num_reviews, num_attempts - 1)
 
     except ElementNotInteractableException:
         print('🚨 ElementNotInteractableException🚨 \n🔄 Refreshing Goodreads site and rescraping book🔄')
-        reviews = fetch_review_info(book_id, num_reviews)
+        reviews = fetch_review_info(book_id, num_reviews, num_attempts - 1)
 
     except JavascriptException:
         print('🚨 JavascriptException \n🔄 Refreshing Goodreads site and rescraping book🔄')
-        reviews = fetch_review_info(book_id, num_reviews)
+        reviews = fetch_review_info(book_id, num_reviews, num_attempts - 1)
 
     except:
         print('🚨 UnknownException \n🔄 Refreshing Goodreads site and rescraping book🔄')
-        reviews = fetch_review_info(book_id, num_reviews)
+        reviews = fetch_review_info(book_id, num_reviews, num_attempts - 1)
 
     driver.close()
     return reviews
