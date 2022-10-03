@@ -7,9 +7,7 @@ import re
 from whoswho import who
 import time
 from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import JavascriptException, ElementNotInteractableException, ElementClickInterceptedException, ElementNotVisibleException, StaleElementReferenceException
-from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import JavascriptException, ElementNotInteractableException, ElementClickInterceptedException
 import re
 
 RATING_STARS_DICT = {'it was amazing': 5,
@@ -161,15 +159,6 @@ def get_id(bookid):
 
 def fetch_review_info(book_id, num_reviews=10, num_attempts=15):
 
-    community_reviews = None
-    """for _ in range(10):
-        r = requests.get(
-            f"https://www.goodreads.com{review_link}")
-        soup = BeautifulSoup(r.text, 'html.parser')
-        community_reviews = soup.find('div', id='ReviewsSection')
-        if (community_reviews):
-            break"""
-
     driver = webdriver.Firefox(executable_path="C:\\Users\\up201906272\\Desktop\\geckodriver.exe")
     url = 'https://www.goodreads.com/book/show/' + book_id
     driver.get(url)
@@ -219,37 +208,6 @@ def fetch_review_info(book_id, num_reviews=10, num_attempts=15):
 
     driver.close()
     return reviews
-
-    """
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
-    community_reviews = soup.find('div', id='ReviewsSection')
-    if (not community_reviews):
-        print("WARNING: No community reviews found")
-        return None
-
-    review_statistics = community_reviews.find(
-        'div', class_='ReviewsSectionStatistics')
-
-    review_average_rating = review_statistics.find(
-        'div', class_='RatingStatistics__rating').text
-    num_of_reviews = review_statistics.find(
-        'div', class_='RatingStatistics__meta')['aria-label']
-
-    print(review_average_rating)
-    print(num_of_reviews)
-    percentage_reviews_raw = review_statistics.find_all(
-        'div', class_="RatingsHistogram__labelTotal")
-
-    percentage_reviews = {}
-    for percentage in percentage_reviews_raw:
-        percentage_reviews[int(percentage['data-testid']
-                               [-1])] = percentage.text
-
-    print(percentage_reviews)
-
-    for review in retrieve_top_reviews(community_reviews.find_all('class', class_="ReviewsList"), num_reviews):
-        print(review)
-    return None"""
 
 
 def retrieve_book_id(book_review_link):
