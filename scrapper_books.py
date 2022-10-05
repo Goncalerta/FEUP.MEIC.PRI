@@ -1,3 +1,4 @@
+from distutils.log import debug
 from lib2to3.pgen2.token import NUMBER
 import requests
 from bs4 import BeautifulSoup
@@ -165,10 +166,10 @@ def parse_book_info_table(data, fetched_books):
 
         author_last_name = author_text_parts[0].strip()
 
-        author_living_years = None
+        author_living_years = [None, None]
         if len(author_text_parts) > 1:
             if '-' in author_text_parts[-1]:
-                author_living_years = author_text_parts[-1].split('-')
+                author_living_years = [x.strip() for x in author_text_parts[-1].split('-')]
                 if len(author_living_years) != 2:
                     raise ScrapperError(f"❌ Invalid author living years structure for book {book_id}: {author_living_years}")
                 author_text_parts = author_text_parts[:-1]
@@ -189,8 +190,8 @@ def parse_book_info_table(data, fetched_books):
             'last_name': author_last_name,
             'first_name': author_first_name,
             'author_title': author_title,
-            'year_of_birth': author_living_years[0].strip(),
-            'year_of_death': author_living_years[1].strip(),
+            'year_of_birth': author_living_years[0],
+            'year_of_death': author_living_years[1],
         }
 
     # Some things that I am currently discarding but may end up being useful in the future
@@ -254,6 +255,6 @@ def pipeline(num_books, folder):
             break
 
 def debug_pipeline():
-    pipeline(10, 'debug')
+    pipeline(50, 'debug')
 
 debug_pipeline()
