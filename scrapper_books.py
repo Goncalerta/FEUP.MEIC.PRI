@@ -9,17 +9,23 @@ import re
 # HACK For some reason emojis in debug messages don't work if I don't do this
 #      the problem happens with commands such as "python scrapper_books.py > debug.txt"
 import sys
+
+
 def print(s, end='\n'):
     sys.stdout.buffer.write(f"{s}{end}".encode('utf8'))
     sys.stdout.buffer.flush()
 
 # Represents something happening during scrapping that means the book should be skipped
+
+
 class ScrapperError(Exception):
     pass
+
 
 class ImprovedVersionAvailable(Exception):
     def __init__(self, betterbook):
         self.betterbook = betterbook
+
 
 def fetch_books(page=0):
     r = requests.get(
@@ -77,28 +83,33 @@ def fetch_book_txt(book_id):
     # r = requests.get(
     #     f"https://www.gutenberg.org/cache/epub/{book_id}/pg{book_id}.txt")
 
-    r = requests.get(f"https://www.gutenberg.org/files/{book_id}/{book_id}-8.txt")
+    r = requests.get(
+        f"https://www.gutenberg.org/files/{book_id}/{book_id}-8.txt")
     if r.status_code != 200:
-        r = requests.get(f"https://www.gutenberg.org/files/{book_id}/{book_id}-0.txt")
+        r = requests.get(
+            f"https://www.gutenberg.org/files/{book_id}/{book_id}-0.txt")
         if r.status_code != 200:
-            r = requests.get(f"https://www.gutenberg.org/files/{book_id}/{book_id}.txt")
+            r = requests.get(
+                f"https://www.gutenberg.org/files/{book_id}/{book_id}.txt")
             if r.status_code != 200:
-                raise ScrapperError(f"❌ Book {book_id} has no UTF-8 or ASCII txt encoded file.")
+                raise ScrapperError(
+                    f"❌ Book {book_id} has no UTF-8 or ASCII txt encoded file.")
     else:
         print(f"👍 Book {book_id} has UTF-8 txt encoded file.")
-    
 
     # The next part tries to filter out the header and footer of the file that is not the book
     # That is hard because some books contain mistakes in the delimiter, so TODO check if this is working for all books
     text = r.text
     text = re.split(r'\*\*\*\s?START[^*]*\*\*\*\s', text, maxsplit=1)
     if len(text) != 2:
-        raise ScrapperError(f"❌ Book {book_id} has no start of the project gutenberg ebook")
+        raise ScrapperError(
+            f"❌ Book {book_id} has no start of the project gutenberg ebook")
 
     text = text[1]
     text = re.split(r'\*\*\*\s?END[^*]*\*\*\*\s', text, maxsplit=1)
     if len(text) != 2:
-        raise ScrapperError(f"❌ Book {book_id} has no end of the project gutenberg ebook")
+        raise ScrapperError(
+            f"❌ Book {book_id} has no end of the project gutenberg ebook")
 
     text = text[0]
     text = text.strip()
@@ -114,7 +125,7 @@ def parse_book_info_table(data, fetched_books):
 
     # HACK to allow books without authors
     if 'Author' not in data:
-        if 'Translator' in data:  
+        if 'Translator' in data:
             # TODO should we do this? We could also just skip these books, or leave the list of authors as empty they don't have an author
             #      we already allow books with no author if they don't have a translator
             print(
@@ -122,14 +133,15 @@ def parse_book_info_table(data, fetched_books):
             data['Author'] = data['Translator']
         else:
             data['Author'] = []
-    
+
     EXPECT_EXACTLY_ONE = ['Title', 'Language',
                           'Release Date', 'Copyright Status', 'EBook-No.']
     for key in EXPECT_EXACTLY_ONE:
         if key not in data or len(data[key]) == 0:
             raise ScrapperError(f"❌ No column '{key}' for book {book_id}")
         if len(data[key]) > 1:
-            raise ScrapperError(f"❌ More than one column '{key}' for book {book_id}")
+            raise ScrapperError(
+                f"❌ More than one column '{key}' for book {book_id}")
 
     if 'Subject' not in data:
         data['Subject'] = []
@@ -146,13 +158,16 @@ def parse_book_info_table(data, fetched_books):
             fetched_books.add(note['href'].split('/')[-1])
 
     if book_id != data['EBook-No.'][0]['text']:
-        raise ScrapperError(f"❌ Book ID mismatch for book {book_id}: {data['EBook-No.'][0]['text']}")
+        raise ScrapperError(
+            f"❌ Book ID mismatch for book {book_id}: {data['EBook-No.'][0]['text']}")
 
     if data['Copyright Status'][0]['text'] != 'Public domain in the USA.':
-        raise ScrapperError(f"❌ Unexpected copyright status for book {book_id}: {data['Copyright Status'][0]['text']}")
-    
+        raise ScrapperError(
+            f"❌ Unexpected copyright status for book {book_id}: {data['Copyright Status'][0]['text']}")
+
     if data['Language'][0]['text'] != 'English':
-        raise ScrapperError(f"❌ Book {book_id} not in English, but instead: {data['Language'][0]['text']}")
+        raise ScrapperError(
+            f"❌ Book {book_id} not in English, but instead: {data['Language'][0]['text']}")
 
     def aux_parse_author(author):
         if author['href'] is None:
@@ -162,16 +177,19 @@ def parse_book_info_table(data, fetched_books):
         author_text_parts = author['text'].split(',')
 
         if len(author_href_parts) == 0:
-            raise ScrapperError(f"❌ Invalid author ID for book {book_id}: {author_href_parts}")
+            raise ScrapperError(
+                f"❌ Invalid author ID for book {book_id}: {author_href_parts}")
 
         author_last_name = author_text_parts[0].strip()
 
         author_living_years = [None, None]
         if len(author_text_parts) > 1:
             if '-' in author_text_parts[-1]:
-                author_living_years = [x.strip() for x in author_text_parts[-1].split('-')]
+                author_living_years = [x.strip()
+                                       for x in author_text_parts[-1].split('-')]
                 if len(author_living_years) != 2:
-                    raise ScrapperError(f"❌ Invalid author living years structure for book {book_id}: {author_living_years}")
+                    raise ScrapperError(
+                        f"❌ Invalid author living years structure for book {book_id}: {author_living_years}")
                 author_text_parts = author_text_parts[:-1]
             elif 'century' in author_text_parts[-1]:
                 century = author_text_parts[-1].strip()
@@ -183,7 +201,7 @@ def parse_book_info_table(data, fetched_books):
         if len(author_text_parts) > 1:
             author_first_name = author_text_parts[1].strip()
         if len(author_text_parts) > 2:
-            author_title = ", ".join(author_text_parts[2:]).strip()        
+            author_title = ", ".join(author_text_parts[2:]).strip()
 
         return {
             'id': author_href_parts[-1],  # last part of the URL
@@ -229,7 +247,7 @@ def pipeline(num_books, folder):
     for book in fetch_books_generator():
         if book not in fetched_books:
             print("===============================")
-        
+
         improved_books_stack = [book]
         while len(improved_books_stack) > 0:
             book = improved_books_stack.pop()
@@ -254,7 +272,9 @@ def pipeline(num_books, folder):
         if scrapped_books >= num_books:
             break
 
+
 def debug_pipeline():
     pipeline(50, 'debug')
+
 
 debug_pipeline()
