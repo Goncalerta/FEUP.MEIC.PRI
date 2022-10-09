@@ -49,7 +49,7 @@ def fetch_review(book_title, author_name):
     if (not table):
         new_book_title = book_title.split(':')[0]
         print(
-            f"WARNING: No review found for '{book_title}'. Trying '{new_book_title}'")
+            f"WARNING: No review found for '{book_title}'. Trying '{new_book_title}'", file=sys.stderr)
         r = requests.get(
             f"https://www.goodreads.com/search?q={new_book_title.replace(' ', '+')}")
         soup = BeautifulSoup(r.text, 'html.parser')
@@ -58,7 +58,7 @@ def fetch_review(book_title, author_name):
 
         if (not table):
             print(
-                f"WARNING: No review found for {new_book_title}.")
+                f"WARNING: No review found for {new_book_title}.", file=sys.stderr)
             return None
 
     rows = table.find_all('tr')
@@ -193,19 +193,19 @@ def fetch_review_info(book_id, num_reviews=10, num_attempts=15):
                 break
 
     except ElementClickInterceptedException:
-        print(f'🚨 ElementClickInterceptedException (Likely a pop-up)🚨\n🔄 Refreshing Goodreads site and rescraping book🔄')
+        print(f'🚨 ElementClickInterceptedException (Likely a pop-up)🚨\n🔄 Refreshing Goodreads site and rescraping book🔄', file=sys.stderr)
         reviews = fetch_review_info(book_id, num_reviews, num_attempts - 1)
 
     except ElementNotInteractableException:
-        print('🚨 ElementNotInteractableException🚨 \n🔄 Refreshing Goodreads site and rescraping book🔄')
+        print('🚨 ElementNotInteractableException🚨 \n🔄 Refreshing Goodreads site and rescraping book🔄', file=sys.stderr)
         reviews = fetch_review_info(book_id, num_reviews, num_attempts - 1)
 
     except JavascriptException:
-        print('🚨 JavascriptException \n🔄 Refreshing Goodreads site and rescraping book🔄')
+        print('🚨 JavascriptException \n🔄 Refreshing Goodreads site and rescraping book🔄', file=sys.stderr)
         reviews = fetch_review_info(book_id, num_reviews, num_attempts - 1)
 
     except:
-        print('🚨 UnknownException \n🔄 Refreshing Goodreads site and rescraping book🔄')
+        print('🚨 UnknownException \n🔄 Refreshing Goodreads site and rescraping book🔄', file=sys.stderr)
         reviews = fetch_review_info(book_id, num_reviews, num_attempts - 1)
 
     driver.close()
@@ -213,7 +213,7 @@ def fetch_review_info(book_id, num_reviews=10, num_attempts=15):
 
 
 def retrieve_book_id(book_review_link):
-    print(book_review_link)
+    print(book_review_link, file=sys.stderr)
     match = re.search('/book/show/(\d+)', book_review_link)
     if match:
         return match.group(1)
@@ -236,9 +236,7 @@ for idx, book in enumerate(sys.stdin):
     book_id = retrieve_book_id(book_review_link)
 
     if (not book_id):
-        print("WARNING: No book ID found")
+        print("WARNING: No book ID found", file=sys.stderr)
         continue
 
-    book_review_info = fetch_review_info(book_id)
-
-    save_review(sys.argv[1], book_review_info, book['id'])
+    print(f"{book['id']},{book_id}")
