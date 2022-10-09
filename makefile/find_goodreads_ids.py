@@ -221,7 +221,7 @@ def retrieve_book_id(book_review_link):
 
 
 def save_review(folder, book_info, book_id):
-    with open(f"output/{folder}/{book_id}.json", 'w') as f:
+    with open(f"{folder}/{book_id}.json", 'w') as f:
         json.dump(book_info, f, indent=4)
 
 for idx, book in enumerate(sys.stdin):
