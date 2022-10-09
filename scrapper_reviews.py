@@ -10,6 +10,16 @@ from selenium import webdriver
 from selenium.common.exceptions import JavascriptException, ElementNotInteractableException, ElementClickInterceptedException
 import re
 
+# HACK For some reason emojis in debug messages don't work if I don't do this
+#      the problem happens with commands such as "python scrapper_books.py > debug.txt"
+import sys
+
+
+def print(s, end='\n'):
+    sys.stdout.buffer.write(f"{s}{end}".encode('utf8'))
+    sys.stdout.buffer.flush()
+
+
 RATING_STARS_DICT = {'it was amazing': 5,
                      'really liked it': 4,
                      'liked it': 3,
@@ -26,6 +36,8 @@ def handle_book_title(book_title):
 
 
 def author_match(author_name, authors):
+    if (not author_name):
+        return True
     for author in authors:
         if who.match(author_name, author) or author_name == author:
             return True
@@ -47,7 +59,7 @@ def fetch_review(book_title, author_name):
     if (not table):
         new_book_title = book_title.split(':')[0]
         print(
-            f"WARNING: No review found for '{book_title}'. Trying '{new_book_title}'")
+            f"❌ No review found for '{book_title}'. 🔃 Trying '{new_book_title}' 🔃")
         r = requests.get(
             f"https://www.goodreads.com/search?q={new_book_title.replace(' ', '+')}")
         soup = BeautifulSoup(r.text, 'html.parser')
@@ -56,7 +68,7 @@ def fetch_review(book_title, author_name):
 
         if (not table):
             print(
-                f"WARNING: No review found for {new_book_title}.")
+                f"❌ No review found for {new_book_title}.")
             return None
 
     rows = table.find_all('tr')
@@ -159,12 +171,14 @@ def get_id(bookid):
 
 def fetch_review_info(book_id, num_reviews=10, num_attempts=15):
 
-    driver = webdriver.Firefox(executable_path="C:\\Users\\up201906272\\Desktop\\geckodriver.exe")
+    driver = webdriver.Firefox(
+        executable_path="C:\\Users\\nrtc\\OneDrive\\Ambiente de Trabalho\\geckodriver.exe")
     url = 'https://www.goodreads.com/book/show/' + book_id
     driver.get(url)
     reviews = []
-    
-    if num_attempts == 0: return reviews
+
+    if num_attempts == 0:
+        return reviews
 
     try:
         time.sleep(4)
@@ -191,22 +205,22 @@ def fetch_review_info(book_id, num_reviews=10, num_attempts=15):
                 break
 
     except ElementClickInterceptedException:
-        print(f'🚨 ElementClickInterceptedException (Likely a pop-up)🚨\n🔄 Refreshing Goodreads site and rescraping book🔄')
+        print(f'❌ ElementClickInterceptedException (Likely a pop-up) \n 🔃 Refreshing Goodreads site and rescraping book 🔃')
         reviews = fetch_review_info(book_id, num_reviews, num_attempts - 1)
 
     except ElementNotInteractableException:
-        print('🚨 ElementNotInteractableException🚨 \n🔄 Refreshing Goodreads site and rescraping book🔄')
+        print('❌ ElementNotInteractableException \n 🔃 Refreshing Goodreads site and rescraping book 🔃')
         reviews = fetch_review_info(book_id, num_reviews, num_attempts - 1)
 
     except JavascriptException:
-        print('🚨 JavascriptException \n🔄 Refreshing Goodreads site and rescraping book🔄')
+        print('❌ JavascriptException \n 🔃 Refreshing Goodreads site and rescraping book 🔃')
         reviews = fetch_review_info(book_id, num_reviews, num_attempts - 1)
 
     except:
-        print('🚨 UnknownException \n🔄 Refreshing Goodreads site and rescraping book🔄')
+        print('❌ UnknownException \n 🔃 Refreshing Goodreads site and rescraping book 🔃')
         reviews = fetch_review_info(book_id, num_reviews, num_attempts - 1)
 
-    driver.close()
+    driver.quit()
     return reviews
 
 
@@ -223,18 +237,18 @@ def save_review(folder, book_info, book_id):
         json.dump(book_info, f, indent=4)
 
 
-def debug_pipeline():
-    ORIG_FOLDER = 'debug'
-    NEW_FOLDER = 'debug_reviews'
+def pipeline(book_folder, review_folder):
 
-    new_directory = f"output/{NEW_FOLDER}"
+    new_directory = f"output/{review_folder}"
     os.makedirs(new_directory, exist_ok=True)
-    for file in os.listdir(new_directory):
-        os.remove(f"{new_directory}/{file}")
+    # for file in os.listdir(new_directory):
+    #    os.remove(f"{new_directory}/{file}")
 
     books = []
-    directory = f"output/{ORIG_FOLDER}"
+    directory = f"output/{book_folder}"
     for file in os.listdir(directory):
+        if (os.path.exists(f"{new_directory}/{file}")):
+            continue
         f = open(f"{directory}/{file}")
         books.append(json.load(f))
 
@@ -243,20 +257,34 @@ def debug_pipeline():
         print(f"Book {idx + 1}: {book['title']}")
         print("-------------------------------")
 
-        first_author = (book['authors'][0]['first_name'] or '') + \
-            ' ' + (book['authors'][0]['last_name'] or '')
+        first_author = None
+        if (book['authors']):
+            first_author = ((book['authors'][0]['first_name'] or '') +
+                            ' ' + (book['authors'][0]['last_name'] or '')).strip()
+        else:
+            print("🚨 No author in book, fetched reviews might not be accurate")
 
         book_review_link = fetch_review(
-            book['title'], first_author.strip() or '')
+            book['title'], first_author)
+
+        if (not book_review_link):
+            print("❌ No book review found ")
+            continue
+
         book_id = retrieve_book_id(book_review_link)
 
         if (not book_id):
-            print("WARNING: No book ID found")
+            print("❌ No book ID found")
             continue
 
         book_review_info = fetch_review_info(book_id)
 
-        save_review(NEW_FOLDER, book_review_info, book['id'])
+        save_review(review_folder, book_review_info, book['id'])
 
 
-debug_pipeline()
+def debug_pipeline():
+    pipeline('debug', 'debug_reviews')
+
+
+# debug_pipeline()
+pipeline('books', 'reviews')
