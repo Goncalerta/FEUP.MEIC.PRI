@@ -89,8 +89,8 @@
             }
         },
         {
-            "name":"authotsType",
-            "multivalued":true,
+            "name":"authorsType",
+            "multiValued": true,
             "class":"solr.TextField",
             "indexAnalyzer":{
                 "tokenizer":{
@@ -130,7 +130,7 @@
         },
         {
             "name": "authors",
-            "type": "authotsType",
+            "type": "authorsType",
             "indexed": true
         }
     ]
