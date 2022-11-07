@@ -237,15 +237,9 @@ def save_review(folder, book_info, book_id):
         json.dump(book_info, f, indent=4)
 
 
-def pipeline(book_folder, review_folder):
-
-    new_directory = f"output/{review_folder}"
-    os.makedirs(new_directory, exist_ok=True)
-    # for file in os.listdir(new_directory):
-    #    os.remove(f"{new_directory}/{file}")
+def pipeline(directory, new_directory):
 
     books = []
-    directory = f"output/{book_folder}"
     for file in os.listdir(directory):
         if (os.path.exists(f"{new_directory}/{file}")):
             continue
@@ -277,14 +271,8 @@ def pipeline(book_folder, review_folder):
             print("❌ No book ID found")
             continue
 
-        book_review_info = fetch_review_info(book_id)
+        #book_review_info = fetch_review_info(book_id)
 
-        save_review(review_folder, book_review_info, book['id'])
+        save_review_book_id(review_folder, book_review_info, book['id'])
 
-
-def debug_pipeline():
-    pipeline('debug', 'debug_reviews')
-
-
-# debug_pipeline()
-pipeline('books', 'reviews')
+pipeline(sys.argv[1], sys.argv[2])
