@@ -1,7 +1,7 @@
 import json
 import os
 
-MAX_FILES = 10
+MAX_FILES = 8000
 
 files = os.listdir("output/books")
 
@@ -31,7 +31,7 @@ def merge_books_and_reviews(fbook, freview):
     if freview != None:
         datareview = json.load(freview)
 
-    if "rating" in databook:
+    if "average_rating" in databook:
         data.append({
             "id": databook["id"],
             "title": databook["title"],
@@ -40,7 +40,7 @@ def merge_books_and_reviews(fbook, freview):
             "subjects": databook["subjects"],
             "reviews": datareview if freview != None else [],
             "text": databook["text"],
-            "rating": databook["rating"],
+            "rating": databook["average_rating"],
             "num_ratings": databook["num_ratings"],
             "num_reviews": databook["num_reviews"],
         })
@@ -67,7 +67,7 @@ for idx, file in enumerate(files):
                 merge_books_and_reviews(fbook, freview)
         except FileNotFoundError as e:
             merge_books_and_reviews(fbook, None)
-                
+
 
 with open("output/books.json", "w", encoding='utf8') as f:
     json.dump(data, f)
