@@ -1,9 +1,9 @@
 # The number of books to fetch initially (should be large enough so that there are 
 # at least NUM_BOOKS_FINAL after the filtering steps)
-NUM_BOOKS_INITIAL_FETCH = 1
+NUM_BOOKS_INITIAL_FETCH = 12000
 # The number of books that we intend to end with (only this amount will fetch and 
 # process reviews and transcriptions, the two most time-consuming steps in the pipeline)
-NUM_BOOKS_FINAL = 1
+NUM_BOOKS_FINAL = 8000
 
 # Installs dependencies needed and runs the pipeline
 all: install run
@@ -37,7 +37,7 @@ output/reviews: output/goodreads_ids.csv
 # Each book should have exactly one title, language, release date and copyright status
 # - filter_by.py filters out json objects where the given field doesn't have the given value
 # Each book should be in english and in public domain in the USA
-# - parse_book_info.py cleans the json objects, keeping only relevant fields
+# - clean_book_info.py cleans the json objects, keeping only relevant fields
 # - head is used to limit the number of books to NUM_BOOKS_FINAL
 output/books_info.jsonl:
 	mkdir -p output
@@ -47,7 +47,7 @@ output/books_info.jsonl:
 	| python expect_exactly_one.py 'Title' 'Language' 'Release Date' 'Copyright Status' \
 	| python filter_by.py 'Copyright Status' 'Public domain in the USA.' \
 	| python filter_by.py 'Language' 'English' \
-	| python parse_book_info.py \
+	| python clean_book_info.py \
 	| head -${NUM_BOOKS_FINAL} \
 	> output/books_info.jsonl
 
