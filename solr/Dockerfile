@@ -1,6 +1,6 @@
 FROM solr:8.10
 
-COPY books.json /data/books.json
+ADD merge /data/books
 
 COPY books_schema.json /data/books_schema.json
 
