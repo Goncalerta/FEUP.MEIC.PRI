@@ -33,13 +33,15 @@ def parse_authors(authors):
         author['author_id'] = author['id']
         del author['id']
         result_birth = re.search(
-            r"(\D+)?(\d+)\D?(BCE)?", author['year_of_birth']) if author['year_of_birth'] else None
+            r"((\d+)\D\D?BCE)|(\D*(\d+)\D?)", author['year_of_birth']) if author['year_of_birth'] else None
         result_death = re.search(
-            r"(\D+)?(\d+)\D?(BCE)?", author['year_of_death']) if author['year_of_death'] else None
+            r"((\d+)\D\D?BCE)|(\D*(\d+)\D?)", author['year_of_death']) if author['year_of_death'] else None
         if result_birth != None:
-            author['year_of_birth'] = -int(result_birth.group(2))
+            author['year_of_birth'] = -int(result_birth.group(2)
+                                           ) if result_birth.group(2) else result_birth.group(4)
         if result_death != None:
-            author['year_of_death'] = -int(result_death.group(2))
+            author['year_of_death'] = -int(result_death.group(2)
+                                           ) if result_death.group(2) else result_death.group(4)
     return authors
 
 

@@ -3,3 +3,4 @@ output.zip
 debug.log.txt
 geckodriver
 geckodriver.log
+solr/merge
