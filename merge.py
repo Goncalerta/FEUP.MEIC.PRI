@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from datetime import datetime
 
 MAX_FILES = 8000
 
@@ -27,36 +28,56 @@ for file in files:
             break
 
 
-def parseAuthors(authors):
+def parse_authors(authors):
     for author in authors:
-
+        author['author_id'] = author['id']
+        del author['id']
         result_birth = re.search(
-            r"((\d+)\D\D?BCE)|((\d+)\D)", author['year_of_birth']) if author['year_of_birth'] else None
+            r"(\D+)?(\d+)\D?(BCE)?", author['year_of_birth']) if author['year_of_birth'] else None
         result_death = re.search(
-            r"((\d+)\D\D?BCE)|((\d+)\D)", author['year_of_death']) if author['year_of_death'] else None
+            r"(\D+)?(\d+)\D?(BCE)?", author['year_of_death']) if author['year_of_death'] else None
         if result_birth != None:
-            author['year_of_birth'] = -int(result_birth.group(2)
-                                           ) if result_birth.group(2) else result_birth.group(4)
+            author['year_of_birth'] = -int(result_birth.group(2))
         if result_death != None:
-            author['year_of_death'] = -int(result_death.group(2)
-                                           ) if result_death.group(2) else result_death.group(4)
+            author['year_of_death'] = -int(result_death.group(2))
     return authors
+
+
+def fix_date(date):
+    if not date:
+        return date
+    date_obj = datetime.strptime(date, "%b %d, %Y").date()
+    return f"{date_obj.year}-{date_obj.month}-{date_obj.day}"
+
+
+def parse_subjects(subjects):
+    subjects_obj = []
+    for subject in subjects:
+        subjects_obj.append({
+            'id': subject[0],
+            'name': subject[1]
+        })
+    return subjects_obj
 
 
 def merge_books_and_reviews(fbook, freview):
     databook = json.load(fbook)
     if freview != None:
         datareview = json.load(freview)
+        for review in datareview:
+            review['date'] = fix_date(review['date'])
 
-    authors = parseAuthors(databook["authors"])
+    authors = parse_authors(databook["authors"])
+    release_date = fix_date(databook["release_date"])
+    subjects = parse_subjects(databook["subjects"])
 
     if "average_rating" in databook:
         data.append({
             "id": databook["id"],
             "title": databook["title"],
             "authors": authors,
-            "release_date": databook["release_date"],
-            "subjects": databook["subjects"],
+            "release_date": release_date,
+            "subjects": subjects,
             "reviews": datareview if freview != None else [],
             "text": databook["text"],
             "rating": databook["average_rating"],
@@ -68,9 +89,9 @@ def merge_books_and_reviews(fbook, freview):
         data.append({
             "id": databook["id"],
             "title": databook["title"],
-            "authors": databook["authors"],
-            "release_date": databook["release_date"],
-            "subjects": databook["subjects"],
+            "authors": authors,
+            "release_date": release_date,
+            "subjects": subjects,
             "reviews": datareview if freview != None else [],
             "text": databook["text"],
         })

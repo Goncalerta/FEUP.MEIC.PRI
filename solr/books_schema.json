@@ -1,108 +1,149 @@
 {
-	"add-field-type": [
+    "add-field-type": [
         {
-            "name":"bookTitleType",
-            "class":"solr.TextField",
-            "indexAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
+            "name": "GeneralTextField",
+            "class": "solr.TextField",
+            "indexAnalyzer": {
+                "tokenizer": {
+                    "class": "solr.StandardTokenizerFactory"
                 },
-                "filters":[
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
+                "filters": [
+                    {
+                        "class": "solr.ASCIIFoldingFilterFactory",
+                        "preserveOriginal": true
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    }
                 ]
             },
-            "queryAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
+            "queryAnalyzer": {
+                "tokenizer": {
+                    "class": "solr.StandardTokenizerFactory"
                 },
-                "filters":[
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
+                "filters": [
+                    {
+                        "class": "solr.ASCIIFoldingFilterFactory",
+                        "preserveOriginal": true
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    }
                 ]
             }
         },
         {
-            "name":"releaseDateType",
-            "class":"solr.TextField",
-            "indexAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
-                },
-                "filters":[
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
-                ]
-            },
-            "queryAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
-                },
-                "filters":[
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
-                ]
-            }
-        },
-        {
-            "name":"bookContentType",
-            "class":"solr.TextField",
-            "indexAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
-                },
-                "filters":[
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
-                ]
-            },
-            "queryAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
-                },
-                "filters":[
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
-                ]
-            }
-        },
-        {
-            "name":"bookContentType",
-            "class":"solr.TextField",
-            "indexAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
-                },
-                "filters":[
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
-                ]
-            },
-            "queryAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
-                },
-                "filters":[
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
-                ]
-            }
+            "name": "DateRangeFieldType",
+            "class": "solr.DateRangeField",
         }
     ],
     "add-field": [
         {
             "name": "title",
-            "type": "bookTitleType",
+            "type": "GeneralTextField",
             "indexed": true
+        },
+        {
+            "name": "authors.author_id",
+            "type": "pint",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "authors.last_name",
+            "type": "string",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "authors.first_name",
+            "type": "string",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "authors.author_title",
+            "type": "GeneralTextField",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "authors.year_of_birth",
+            "type": "DateRangeFieldType",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "authors.year_of_death",
+            "type": "DateRangeFieldType",
+            "indexed": true,
+            "multiValued": true
         },
         {
             "name": "release_date",
-            "type": "releaseDateType",
+            "type": "pdate",
             "indexed": true
         },
         {
+            "name": "reviews.date",
+            "type": "pdate",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "reviews.rating",
+            "type": "pfloat",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "reviews.user_name",
+            "type": "string",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "reviews.text",
+            "type": "GeneralTextField",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "reviews.num_likes",
+            "type": "plong",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "subjects.id",
+            "type": "pint",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "subjects.name",
+            "type": "GeneralTextField",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
             "name": "text",
-            "type": "bookContentType",
+            "type": "GeneralTextField",
+            "indexed": true
+        },
+        {
+            "name": "rating",
+            "type": "pfloat",
+            "indexed": true
+        },
+        {
+            "name": "num_ratings",
+            "type": "plong",
+            "indexed": true
+        },
+        {
+            "name": "num_reviews",
+            "type": "plong",
             "indexed": true
         }
     ]
