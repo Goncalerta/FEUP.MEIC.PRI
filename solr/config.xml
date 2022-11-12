@@ -1,0 +1,43 @@
+<lib dir="/opt/solr-8.10.1/contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
+<lib dir="/opt/solr-8.10.1/contrib/analysis-extras/lib" regex=".*\.jar"/>
+<lib path="/opt/solr-8.10.1/dist/solr-analysis-extras-8.10.1.jar"/>
+<lib dir="/opt/solr-8.10.1/contrib/ltr/lib/" regex=".*\.jar" />
+<lib dir="/opt/solr-8.10.1/dist/" regex="solr-ltr-\d.*\.jar" />
+
+<queryParser name="ltr" class="org.apache.solr.ltr.search.LTRQParserPlugin"/>
+
+<cache name="QUERY_DOC_FV"
+        class="solr.search.LRUCache"
+        size="4096"
+        initialSize="2048"
+        autowarmCount="4096"
+        regenerator="solr.search.NoOpRegenerator" />
+
+<transformer name="features" class="org.apache.solr.ltr.response.transform.LTRFeatureLoggerTransformerFactory">
+    <str name="fvCacheName">QUERY_DOC_FV</str>
+</transformer>
+
+
+<updateRequestProcessorChain name="add-unknown-fields-to-the-schema" default="${update.autoCreateFields:true}" processor="uuid,remove-blank,field-name-mutating,parse-boolean,parse-long,parse-double,parse-date,add-schema-fields">
+    <processor class="solr.LogUpdateProcessorFactory"/>
+    <processor class="solr.DistributedUpdateProcessorFactory"/>
+    <!--<processor class="solr.OpenNLPExtractNamedEntitiesUpdateProcessorFactory">
+      <str name="modelFile">conf/en-ner-person.bin</str>
+      <str name="analyzerFieldType">GeneralTextField</str>
+      <str name="source">text</str>
+      <str name="dest">person_book</str>
+   </processor>
+   <processor class="solr.OpenNLPExtractNamedEntitiesUpdateProcessorFactory">
+      <str name="modelFile">conf/en-ner-location.bin</str>
+      <str name="analyzerFieldType">GeneralTextField</str>
+      <str name="source">text</str>
+      <str name="dest">location_book</str>
+   </processor>
+   <processor class="solr.OpenNLPExtractNamedEntitiesUpdateProcessorFactory">
+      <str name="modelFile">conf/en-ner-date.bin</str>
+      <str name="analyzerFieldType">GeneralTextField</str>
+      <str name="source">text</str>
+      <str name="dest">date_book</str>
+   </processor>-->
+   <processor class="solr.RunUpdateProcessorFactory"/>
+</updateRequestProcessorChain> 
