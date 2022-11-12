@@ -34,7 +34,7 @@
         },
         {
             "name": "DateRangeFieldType",
-            "class": "solr.DateRangeField",
+            "class": "solr.DateRangeField"
         }
     ],
     "add-field": [
@@ -44,40 +44,29 @@
             "indexed": true
         },
         {
-            "name": "authors.author_id",
-            "type": "pint",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "authors.last_name",
+            "name": "last_name",
             "type": "string",
-            "indexed": true,
-            "multiValued": true
+            "indexed": true
         },
         {
-            "name": "authors.first_name",
+            "name": "first_name",
             "type": "string",
-            "indexed": true,
-            "multiValued": true
+            "indexed": true
         },
         {
-            "name": "authors.author_title",
+            "name": "author_title",
             "type": "GeneralTextField",
-            "indexed": true,
-            "multiValued": true
+            "indexed": true
         },
         {
-            "name": "authors.year_of_birth",
+            "name": "year_of_birth",
             "type": "DateRangeFieldType",
-            "indexed": true,
-            "multiValued": true
+            "indexed": true
         },
         {
-            "name": "authors.year_of_death",
+            "name": "year_of_death",
             "type": "DateRangeFieldType",
-            "indexed": true,
-            "multiValued": true
+            "indexed": true
         },
         {
             "name": "release_date",
@@ -85,43 +74,22 @@
             "indexed": true
         },
         {
-            "name": "reviews.date",
+            "name": "date",
             "type": "pdate",
-            "indexed": true,
-            "multiValued": true
+            "indexed": true
         },
         {
-            "name": "reviews.rating",
-            "type": "pfloat",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "reviews.user_name",
+            "name": "user_name",
             "type": "string",
-            "indexed": true,
-            "multiValued": true
+            "indexed": true
         },
         {
-            "name": "reviews.text",
-            "type": "GeneralTextField",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "reviews.num_likes",
+            "name": "num_likes",
             "type": "plong",
-            "indexed": true,
-            "multiValued": true
+            "indexed": true
         },
         {
-            "name": "subjects.id",
-            "type": "pint",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "subjects.name",
+            "name": "subjects",
             "type": "GeneralTextField",
             "indexed": true,
             "multiValued": true

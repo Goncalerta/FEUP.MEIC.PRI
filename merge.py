@@ -3,7 +3,7 @@ import os
 import re
 from datetime import datetime
 
-MAX_FILES = 8000
+MAX_FILES = 10
 
 files = os.listdir("output/books")
 
@@ -13,7 +13,6 @@ else:
     num_files = min(MAX_FILES, len(files))
 
 data = []
-
 
 maxwarnings = 10
 for file in files:
@@ -28,10 +27,10 @@ for file in files:
             break
 
 
-def parse_authors(authors):
+def parse_authors(bookid, authors):
     for author in authors:
-        author['author_id'] = author['id']
-        del author['id']
+        author['id'] = f'{bookid}_AUTHOR_{author["id"]}'
+
         result_birth = re.search(
             r"((\d+)\D\D?BCE)|(\D*(\d+)\D?)", author['year_of_birth']) if author['year_of_birth'] else None
         result_death = re.search(
@@ -55,10 +54,7 @@ def fix_date(date):
 def parse_subjects(subjects):
     subjects_obj = []
     for subject in subjects:
-        subjects_obj.append({
-            'id': subject[0],
-            'name': subject[1]
-        })
+        subjects_obj.append(subject[1])
     return subjects_obj
 
 
@@ -66,10 +62,13 @@ def merge_books_and_reviews(fbook, freview):
     databook = json.load(fbook)
     if freview != None:
         datareview = json.load(freview)
+        i = 1
         for review in datareview:
+            review['id'] = f'{databook["id"]}_REVIEW_{i}'
+            i += 1
             review['date'] = fix_date(review['date'])
 
-    authors = parse_authors(databook["authors"])
+    authors = parse_authors(databook["id"], databook["authors"])
     release_date = fix_date(databook["release_date"])
     subjects = parse_subjects(databook["subjects"])
 
