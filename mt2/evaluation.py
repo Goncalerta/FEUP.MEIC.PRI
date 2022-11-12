@@ -13,9 +13,9 @@ def ap(results, relevant):
     """Average Precision"""
     precision_values = [
         len([
-            doc
-            for doc in results[:idx]
-            if doc['id'] in relevant
+            val
+            for val in results[:idx]
+            if val in relevant
         ]) / idx
         for idx in range(1, len(results))
     ]
@@ -25,7 +25,7 @@ def ap(results, relevant):
 @metric
 def p10(results, relevant, n=10):
     """Precision at N"""
-    return len([doc for doc in results[:n] if doc['id'] in relevant])/n
+    return len([val for val in results[:n] if val in relevant])/n
 
 
 # Define metrics to be calculated
@@ -40,6 +40,7 @@ class EvaluateQuery:
     def __init__(self, results, relevant):
         self.results = results
         self.relevant = relevant
+        print(results, relevant)
 
     def calculate_metric(self, key):
         return metrics[key](self.results, self.relevant)
@@ -56,22 +57,27 @@ class EvaluateQuery:
         with open(f'{filepath}/results.tex', 'w') as tf:
             tf.write(df.to_latex())
 
+    def export_ap(self, filepath):
+        ap = self.calculate_metric('ap')
+        with open(f'{filepath}/ap.txt', 'w') as tf:
+            tf.write(str(ap))
+
     def plot_precision_recall(self, filepath):
         # PRECISION-RECALL CURVE
         # Calculate precision and recall values as we move down the ranked list
         precision_values = [
             len([
-                doc
-                for doc in self.results[:idx]
-                if doc['id'] in self.relevant
+                val
+                for val in self.results[:idx]
+                if val in self.relevant
             ]) / idx
             for idx, _ in enumerate(self.results, start=1)
         ]
 
         recall_values = [
             len([
-                doc for doc in self.results[:idx]
-                if doc['id'] in self.relevant
+                val for val in self.results[:idx]
+                if val in self.relevant
             ]) / len(self.relevant)
             for idx, _ in enumerate(self.results, start=1)
         ]

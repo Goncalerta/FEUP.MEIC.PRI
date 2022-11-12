@@ -1,4 +1,4 @@
-import os
+import json
 
 queries = ["q1", "q2"]
 systems = ["sys1", "sys2", "sys3"]
@@ -15,4 +15,5 @@ for query in queries:
         except FileNotFoundError:
             pass
 
-print({k: v / total_ap[k] for k, v in total_sum.items()})
+sum_values = {k: v / total_ap[k] for k, v in total_sum.items()}
+json.dump(sum_values, open("map.json", "w"))
