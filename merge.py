@@ -4,7 +4,7 @@ import re
 from datetime import datetime
 import xml.etree.cElementTree as ET
 
-MAX_FILES = 10
+MAX_FILES = 8000
 
 files = os.listdir("output/books")
 
