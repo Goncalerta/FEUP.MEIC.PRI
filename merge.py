@@ -2,6 +2,7 @@ import json
 import os
 import re
 from datetime import datetime
+import xml.etree.cElementTree as ET
 
 MAX_FILES = 8000
 
@@ -13,7 +14,6 @@ else:
     num_files = min(MAX_FILES, len(files))
 
 data = []
-
 
 maxwarnings = 10
 for file in files:
@@ -28,10 +28,12 @@ for file in files:
             break
 
 
-def parse_authors(authors):
+def parse_authors(bookid, authors):
     for author in authors:
-        author['author_id'] = author['id']
-        del author['id']
+        author['id'] = f'{bookid}_AUTHOR_{author["id"]}'
+
+        author['content_type'] = "AUTHOR"
+
         result_birth = re.search(
             r"((\d+)\D\D?BCE)|(\D*(\d+)\D?)", author['year_of_birth']) if author['year_of_birth'] else None
         result_death = re.search(
@@ -49,16 +51,13 @@ def fix_date(date):
     if not date:
         return date
     date_obj = datetime.strptime(date, "%b %d, %Y").date()
-    return f"{date_obj.year}-{date_obj.month}-{date_obj.day}"
+    return f"{date_obj.year}-{date_obj.month}-{date_obj.day}T00:00:00Z"
 
 
 def parse_subjects(subjects):
     subjects_obj = []
     for subject in subjects:
-        subjects_obj.append({
-            'id': subject[0],
-            'name': subject[1]
-        })
+        subjects_obj.append(subject[1])
     return subjects_obj
 
 
@@ -66,10 +65,14 @@ def merge_books_and_reviews(fbook, freview):
     databook = json.load(fbook)
     if freview != None:
         datareview = json.load(freview)
+        i = 1
         for review in datareview:
+            review['content_type'] = "REVIEW"
+            review['id'] = f'{databook["id"]}_REVIEW_{i}'
+            i += 1
             review['date'] = fix_date(review['date'])
 
-    authors = parse_authors(databook["authors"])
+    authors = parse_authors(databook["id"], databook["authors"])
     release_date = fix_date(databook["release_date"])
     subjects = parse_subjects(databook["subjects"])
 
@@ -85,6 +88,7 @@ def merge_books_and_reviews(fbook, freview):
             "rating": databook["average_rating"],
             "num_ratings": databook["num_ratings"],
             "num_reviews": databook["num_reviews"],
+            "content_type": "BOOK",
         })
     else:
         print(f"WARNING: Book {databook['id']} has no rating")
@@ -96,6 +100,7 @@ def merge_books_and_reviews(fbook, freview):
             "subjects": subjects,
             "reviews": datareview if freview != None else [],
             "text": databook["text"],
+            "content_type": "BOOK",
         })
 
 
@@ -110,7 +115,28 @@ for idx, file in enumerate(files):
         except FileNotFoundError as e:
             merge_books_and_reviews(fbook, None)
 
+def parse_element(doc, key, value):
+    if value is None or str(value) == "":
+        return
+    if isinstance(value, list):
+        for item in value:
+            parse_element(doc, key, item)
+    elif isinstance(value, dict):
+        subdoc = ET.SubElement(ET.SubElement(doc, "field", name=key), "doc")
+        for k, v in value.items():
+            parse_element(subdoc, k, v)
+    else:
+        ET.SubElement(doc, "field", name=key).text = str(value)
 
 for file in data:
-    with open("solr/merge/" + file["id"] + ".json", "w+", encoding='utf8') as f:
-        json.dump(file, f, ensure_ascii=False)
+    #with open("solr/merge/" + file["id"] + ".json", "w+", encoding='utf8') as f:
+    #    json.dump(file, f, ensure_ascii=False)
+
+    root = ET.Element("add")
+    doc = ET.SubElement(root, "doc")
+
+    for key, value in file.items():
+        parse_element(doc, key, value)
+
+    tree = ET.ElementTree(root)
+    tree.write("solr/merge/" + file["id"] + ".xml", encoding='utf8')

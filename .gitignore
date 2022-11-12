@@ -4,3 +4,6 @@ debug.log.txt
 geckodriver
 geckodriver.log
 solr/merge
+solr/merge_large
+solr/data
+solr/data_large
