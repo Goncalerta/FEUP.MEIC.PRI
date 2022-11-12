@@ -15,7 +15,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary @/data/books_schem
 sleep 10
 
 # Populate collection
-bin/post -c books /data/books/*.json
+bin/post -c books /data/books/*.xml
 
 # Restart in foreground mode so we can access the interface
 solr restart -f

@@ -2,6 +2,7 @@ import json
 import os
 import re
 from datetime import datetime
+import xml.etree.cElementTree as ET
 
 MAX_FILES = 10
 
@@ -109,7 +110,26 @@ for idx, file in enumerate(files):
         except FileNotFoundError as e:
             merge_books_and_reviews(fbook, None)
 
+def parse_element(doc, key, value):
+    if isinstance(value, list):
+        for item in value:
+            parse_element(doc, key, item)
+    elif isinstance(value, dict):
+        subdoc = ET.SubElement(doc, "doc")
+        for k, v in value.items():
+            parse_element(subdoc, k, v)
+    else:
+        ET.SubElement(doc, "field", name=key).text = str(value)
 
 for file in data:
-    with open("solr/merge/" + file["id"] + ".json", "w+", encoding='utf8') as f:
-        json.dump(file, f, ensure_ascii=False)
+    #with open("solr/merge/" + file["id"] + ".json", "w+", encoding='utf8') as f:
+    #    json.dump(file, f, ensure_ascii=False)
+
+    root = ET.Element("add")
+    doc = ET.SubElement(root, "doc")
+
+    for key, value in file.items():
+        parse_element(doc, key, value)
+
+    tree = ET.ElementTree(root)
+    tree.write("solr/merge/" + file["id"] + ".xml", encoding='utf8')
