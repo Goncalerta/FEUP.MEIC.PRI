@@ -2,6 +2,8 @@
 
 precreate-core books
 
+cp /data/enumsConfig.xml /var/solr/data/books/enumsConfig.xml
+
 # Start Solr in background mode so we can use the API to upload the schema
 solr start
 

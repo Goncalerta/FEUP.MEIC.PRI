@@ -35,11 +35,55 @@
         {
             "name": "DateRangeFieldType",
             "class": "solr.DateRangeField"
+        },
+        {
+            "name": "ContentType",
+            "class": "solr.EnumFieldType",
+            "docValues": true,
+            "enumsConfig": "enumsConfig.xml",
+            "enumName": "content_type"
         }
     ],
     "add-field": [
         {
+            "name": "content_type",
+            "type": "ContentType",
+            "indexed": true,
+            "required": true
+        },
+        {
             "name": "title",
+            "type": "GeneralTextField",
+            "indexed": true
+        },
+        {
+            "name": "release_date",
+            "type": "pdate",
+            "indexed": true
+        },
+        {
+            "name": "subjects",
+            "type": "GeneralTextField",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "rating",
+            "type": "pfloat",
+            "indexed": true
+        },
+        {
+            "name": "num_ratings",
+            "type": "plong",
+            "indexed": true
+        },
+        {
+            "name": "num_reviews",
+            "type": "plong",
+            "indexed": true
+        },
+        {
+            "name": "text",
             "type": "GeneralTextField",
             "indexed": true
         },
@@ -69,11 +113,6 @@
             "indexed": true
         },
         {
-            "name": "release_date",
-            "type": "pdate",
-            "indexed": true
-        },
-        {
             "name": "date",
             "type": "pdate",
             "indexed": true
@@ -85,32 +124,6 @@
         },
         {
             "name": "num_likes",
-            "type": "plong",
-            "indexed": true
-        },
-        {
-            "name": "subjects",
-            "type": "GeneralTextField",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "text",
-            "type": "GeneralTextField",
-            "indexed": true
-        },
-        {
-            "name": "rating",
-            "type": "pfloat",
-            "indexed": true
-        },
-        {
-            "name": "num_ratings",
-            "type": "plong",
-            "indexed": true
-        },
-        {
-            "name": "num_reviews",
             "type": "plong",
             "indexed": true
         }

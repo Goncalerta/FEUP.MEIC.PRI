@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<enumsConfig>
+  <enum name="content_type">
+    <value>BOOK</value>
+    <value>AUTHOR</value>
+    <value>REVIEW</value>
+  </enum>
+</enumsConfig>

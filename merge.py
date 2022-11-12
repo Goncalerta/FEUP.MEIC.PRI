@@ -32,6 +32,8 @@ def parse_authors(bookid, authors):
     for author in authors:
         author['id'] = f'{bookid}_AUTHOR_{author["id"]}'
 
+        author['content_type'] = "AUTHOR"
+
         result_birth = re.search(
             r"((\d+)\D\D?BCE)|(\D*(\d+)\D?)", author['year_of_birth']) if author['year_of_birth'] else None
         result_death = re.search(
@@ -49,7 +51,7 @@ def fix_date(date):
     if not date:
         return date
     date_obj = datetime.strptime(date, "%b %d, %Y").date()
-    return f"{date_obj.year}-{date_obj.month}-{date_obj.day}"
+    return f"{date_obj.year}-{date_obj.month}-{date_obj.day}T00:00:00Z"
 
 
 def parse_subjects(subjects):
@@ -65,6 +67,7 @@ def merge_books_and_reviews(fbook, freview):
         datareview = json.load(freview)
         i = 1
         for review in datareview:
+            review['content_type'] = "REVIEW"
             review['id'] = f'{databook["id"]}_REVIEW_{i}'
             i += 1
             review['date'] = fix_date(review['date'])
@@ -85,6 +88,7 @@ def merge_books_and_reviews(fbook, freview):
             "rating": databook["average_rating"],
             "num_ratings": databook["num_ratings"],
             "num_reviews": databook["num_reviews"],
+            "content_type": "BOOK",
         })
     else:
         print(f"WARNING: Book {databook['id']} has no rating")
@@ -96,6 +100,7 @@ def merge_books_and_reviews(fbook, freview):
             "subjects": subjects,
             "reviews": datareview if freview != None else [],
             "text": databook["text"],
+            "content_type": "BOOK",
         })
 
 
@@ -111,11 +116,13 @@ for idx, file in enumerate(files):
             merge_books_and_reviews(fbook, None)
 
 def parse_element(doc, key, value):
+    if value is None or str(value) == "":
+        return
     if isinstance(value, list):
         for item in value:
             parse_element(doc, key, item)
     elif isinstance(value, dict):
-        subdoc = ET.SubElement(doc, "doc")
+        subdoc = ET.SubElement(ET.SubElement(doc, "field", name=key), "doc")
         for k, v in value.items():
             parse_element(subdoc, k, v)
     else:
