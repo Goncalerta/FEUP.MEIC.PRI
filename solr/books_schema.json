@@ -75,12 +75,12 @@
         {
             "name": "num_ratings",
             "type": "plong",
-            "indexed": true
+            "indexed": false
         },
         {
             "name": "num_reviews",
             "type": "plong",
-            "indexed": true
+            "indexed": false
         },
         {
             "name": "text",
@@ -100,32 +100,32 @@
         {
             "name": "author_title",
             "type": "GeneralTextField",
-            "indexed": true
+            "indexed": false
         },
         {
             "name": "year_of_birth",
             "type": "DateRangeFieldType",
-            "indexed": true
+            "indexed": false
         },
         {
             "name": "year_of_death",
             "type": "DateRangeFieldType",
-            "indexed": true
+            "indexed": false
         },
         {
             "name": "date",
             "type": "pdate",
-            "indexed": true
+            "indexed": false
         },
         {
             "name": "user_name",
             "type": "string",
-            "indexed": true
+            "indexed": false
         },
         {
             "name": "num_likes",
             "type": "plong",
-            "indexed": true
+            "indexed": false
         }
     ]
 }
