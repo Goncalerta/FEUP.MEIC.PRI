@@ -1,7 +1,7 @@
 import json
 
-queries = ["q1", "q2"]
-systems = ["sys1", "sys2", "sys3"]
+queries = ["q1", "q2", "q3", "q4"]
+systems = ["sys1", "sys2", "sys1_syn", "sys2_syn"]
 
 total_sum = {k: 0 for k in systems}
 total_ap = {k: 0 for k in systems}
