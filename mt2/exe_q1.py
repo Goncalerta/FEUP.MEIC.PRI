@@ -20,7 +20,7 @@ results_dict = {}
 
 fig, ax = plt.subplots()
 # plt change y axis to 0-1
-ax.ylim(0, 1)
+ax.set_ylim(0, 1)
 
 for system, url in query.items():
     # Read qrels to extract relevant documents
