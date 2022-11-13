@@ -61,7 +61,7 @@ class EvaluateQuery:
         with open(f'{filepath}/ap.txt', 'w+') as tf:
             tf.write(str(ap))
 
-    def plot_precision_recall(self, name, ax):
+    def plot_precision_recall(self):
         # PRECISION-RECALL CURVE
         # Calculate precision and recall values as we move down the ranked list
 
