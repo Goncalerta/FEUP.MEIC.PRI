@@ -2,6 +2,7 @@
 from sklearn.metrics import PrecisionRecallDisplay
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 metrics = {}
 def metric(f): return metrics.setdefault(f.__name__, f)
@@ -101,7 +102,8 @@ class EvaluateQuery:
                 else:
                     precision_recall_match[step] = precision_recall_match[recall_values[idx+1]]
 
-        return PrecisionRecallDisplay(
+        disp = PrecisionRecallDisplay(
             [precision_recall_match.get(r) for r in recall_values], recall_values)
         
-        #plt.savefig(f'{filepath}/precision_recall.pdf')
+        disp.plot()
+        plt.savefig(f'q1/precision_recall_global_local.pdf')

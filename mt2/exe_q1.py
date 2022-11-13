@@ -1,7 +1,7 @@
 from evaluation import EvaluateQuery
 import requests
 import os
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 QRELS_FILE = "./q1/qrels.txt"
 
@@ -53,11 +53,11 @@ for system, url in query.items():
 # create a ax
 #ax = fig.add_subplot(111)
 # plot the data
-for graph in graphs:
-    graph.plot()
+#for graph in graphs:
+#    graph.plot()
 
 # save the figure
-plt.savefig('q1/precision_recall_global.png')
+#plt.savefig('q1/precision_recall_global.png')
 # disp.plot(ax=ax, name="Micro-average precision-recall", color="red", linewidth=1, linestyle=":",)
 
 
