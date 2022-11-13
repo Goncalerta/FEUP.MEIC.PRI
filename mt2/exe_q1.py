@@ -1,6 +1,7 @@
 from evaluation import EvaluateQuery
 import requests
 import os
+import matplotlib.pyplot as plt
 
 QRELS_FILE = "./q1/qrels.txt"
 
@@ -14,6 +15,9 @@ query = {
 relevant = list(map(lambda el: el.strip(), open(QRELS_FILE).readlines()))
 
 results_dict = {}
+
+# plt change y axis to 0-1
+plt.ylim(0, 1)
 
 for system, url in query.items():
     # Read qrels to extract relevant documents
@@ -38,6 +42,12 @@ for system, url in query.items():
     qe.plot_precision_recall(path)
     qe.export_ap(path)
 
+#qe.plot_precision_recall("q1", ["q1/sys1", "q1/sys2", "q1/sys1_syn", "q1/sys2_syn"])
+
+# plt set legend
+plt.legend(["sys1", "sys2", "sys1_syn", "sys2_syn"])
+
+plt.savefig('q1/precision_recall.pdf')
 
 for i in range(10):
     sys1_r = ('R' if results_dict['sys1'][i]

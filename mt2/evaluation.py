@@ -105,4 +105,4 @@ class EvaluateQuery:
         disp = PrecisionRecallDisplay(
             [precision_recall_match.get(r) for r in recall_values], recall_values)
         disp.plot()
-        plt.savefig(f'{filepath}/precision_recall.pdf')
+        #plt.savefig(f'{filepath}/precision_recall.pdf')
