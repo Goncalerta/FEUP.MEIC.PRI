@@ -40,7 +40,7 @@ for system, url in query.items():
         os.makedirs(path)
 
     qe.export_metrics(path)
-    qe.plot_precision_recall(system)
+    qe.plot_precision_recall(system, plt.gca())
     qe.export_ap(path)
 
 #qe.plot_precision_recall("q1", ["q1/sys1", "q1/sys2", "q1/sys1_syn", "q1/sys2_syn"])

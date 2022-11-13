@@ -1,5 +1,4 @@
 # SETUP
-import matplotlib.pyplot as plt
 from sklearn.metrics import PrecisionRecallDisplay
 import numpy as np
 import pandas as pd
@@ -62,7 +61,7 @@ class EvaluateQuery:
         with open(f'{filepath}/ap.txt', 'w+') as tf:
             tf.write(str(ap))
 
-    def plot_precision_recall(self, name):
+    def plot_precision_recall(self, name, ax):
         # PRECISION-RECALL CURVE
         # Calculate precision and recall values as we move down the ranked list
 
@@ -104,5 +103,5 @@ class EvaluateQuery:
 
         disp = PrecisionRecallDisplay(
             [precision_recall_match.get(r) for r in recall_values], recall_values)
-        disp.plot(ax=plt.gca(), name=name)
+        disp.plot(ax=ax, name=name)
         #plt.savefig(f'{filepath}/precision_recall.pdf')
