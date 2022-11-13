@@ -18,7 +18,8 @@ results_dict = {}
 
 # create 
 
-plt.ylim(0, 1)
+# type array of PrecisionRecallDisplay
+graphs = []
 
 for system, url in query.items():
     # Read qrels to extract relevant documents
@@ -40,14 +41,25 @@ for system, url in query.items():
         os.makedirs(path)
 
     qe.export_metrics(path)
-    qe.plot_precision_recall(system, plt.gca())
+    graphs.append(qe.plot_precision_recall(system, plt.gca()))
     qe.export_ap(path)
 
 #qe.plot_precision_recall("q1", ["q1/sys1", "q1/sys2", "q1/sys1_syn", "q1/sys2_syn"])
 
 # plt set legend
 
-plt.savefig('q1/precision_recall.pdf')
+# create a figure
+fig = plt.figure(figsize=(10, 10))
+# create a ax
+ax = fig.add_subplot(111)
+# plot the data
+for graph in graphs:
+    graph.plot(ax=ax)
+
+# save the figure
+fig.savefig('q1/precision_recall_global.png')
+# disp.plot(ax=ax, name="Micro-average precision-recall", color="red", linewidth=1, linestyle=":",)
+
 
 for i in range(10):
     sys1_r = ('R' if results_dict['sys1'][i]

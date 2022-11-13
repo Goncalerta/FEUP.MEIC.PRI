@@ -101,7 +101,7 @@ class EvaluateQuery:
                 else:
                     precision_recall_match[step] = precision_recall_match[recall_values[idx+1]]
 
-        disp = PrecisionRecallDisplay(
+        return PrecisionRecallDisplay(
             [precision_recall_match.get(r) for r in recall_values], recall_values)
-        disp.plot(ax=ax, name="Micro-average precision-recall", color="red", linewidth=1, linestyle=":",)
+        
         #plt.savefig(f'{filepath}/precision_recall.pdf')
