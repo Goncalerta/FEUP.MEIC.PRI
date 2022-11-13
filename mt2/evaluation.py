@@ -54,12 +54,12 @@ class EvaluateQuery:
         ]
         )
 
-        with open(f'{filepath}/results.tex', 'w') as tf:
+        with open(f'{filepath}/results.tex', 'w+') as tf:
             tf.write(df.to_latex())
 
     def export_ap(self, filepath):
         ap = self.calculate_metric('ap')
-        with open(f'{filepath}/ap.txt', 'w') as tf:
+        with open(f'{filepath}/ap.txt', 'w+') as tf:
             tf.write(str(ap))
 
     def plot_precision_recall(self, filepath):

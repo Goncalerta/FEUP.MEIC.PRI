@@ -1,0 +1,129 @@
+{
+    "add-field-type": [
+        {
+            "name": "GeneralTextField",
+            "class": "solr.TextField",
+            "analyzer": {
+                "tokenizer": {
+                    "class": "solr.StandardTokenizerFactory"
+                },
+                "filters": [
+                    {
+                        "class": "solr.ASCIIFoldingFilterFactory",
+                        "preserveOriginal": "true"
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    },
+                    {
+                        "class": "solr.SynonymGraphFilterFactory",
+                        "synonyms": "synonyms.txt",
+                        "ignoreCase": "true",
+                        "expand": "false"
+                    },
+                    {
+                        "class": "solr.EnglishPossessiveFilterFactory"
+                    },
+                    {
+                        "class": "solr.EnglishMinimalStemFilterFactory"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "DateRangeFieldType",
+            "class": "solr.DateRangeField"
+        },
+        {
+            "name": "ContentType",
+            "class": "solr.EnumFieldType",
+            "docValues": true,
+            "enumsConfig": "enumsConfig.xml",
+            "enumName": "content_type"
+        }
+    ],
+    "add-field": [
+        {
+            "name": "content_type",
+            "type": "ContentType",
+            "indexed": true,
+            "required": true
+        },
+        {
+            "name": "title",
+            "type": "GeneralTextField",
+            "indexed": true
+        },
+        {
+            "name": "release_date",
+            "type": "pdate",
+            "indexed": true
+        },
+        {
+            "name": "subjects",
+            "type": "GeneralTextField",
+            "indexed": true,
+            "multiValued": true
+        },
+        {
+            "name": "rating",
+            "type": "pfloat",
+            "indexed": true
+        },
+        {
+            "name": "num_ratings",
+            "type": "plong",
+            "indexed": true
+        },
+        {
+            "name": "num_reviews",
+            "type": "plong",
+            "indexed": true
+        },
+        {
+            "name": "text",
+            "type": "GeneralTextField",
+            "indexed": true
+        },
+        {
+            "name": "last_name",
+            "type": "string",
+            "indexed": true
+        },
+        {
+            "name": "first_name",
+            "type": "string",
+            "indexed": true
+        },
+        {
+            "name": "author_title",
+            "type": "GeneralTextField",
+            "indexed": true
+        },
+        {
+            "name": "year_of_birth",
+            "type": "DateRangeFieldType",
+            "indexed": true
+        },
+        {
+            "name": "year_of_death",
+            "type": "DateRangeFieldType",
+            "indexed": true
+        },
+        {
+            "name": "date",
+            "type": "pdate",
+            "indexed": true
+        },
+        {
+            "name": "user_name",
+            "type": "string",
+            "indexed": true
+        },
+        {
+            "name": "num_likes",
+            "type": "plong",
+            "indexed": true
+        }
+    ]
+}

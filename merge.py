@@ -115,6 +115,7 @@ for idx, file in enumerate(files):
         except FileNotFoundError as e:
             merge_books_and_reviews(fbook, None)
 
+
 def parse_element(doc, key, value):
     if value is None or str(value) == "":
         return
@@ -126,10 +127,12 @@ def parse_element(doc, key, value):
         for k, v in value.items():
             parse_element(subdoc, k, v)
     else:
-        ET.SubElement(doc, "field", name=key).text = str(value)
+        ET.SubElement(doc, "field", name=key).text = str.encode(
+            value).decode('utf-8')
+
 
 for file in data:
-    #with open("solr/merge/" + file["id"] + ".json", "w+", encoding='utf8') as f:
+    # with open("solr/merge/" + file["id"] + ".json", "w+", encoding='utf8') as f:
     #    json.dump(file, f, ensure_ascii=False)
 
     root = ET.Element("add")

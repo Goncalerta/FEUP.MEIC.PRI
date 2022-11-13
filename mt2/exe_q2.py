@@ -2,7 +2,7 @@ from evaluation import EvaluateQuery
 import requests
 import os
 
-QRELS_FILE = "./q1/qrels.txt"
+QRELS_FILE = "./q2/qrels.txt"
 
 query = {
     "sys1": "http://localhost:8983/solr/books/select?df=text&hl.fl=*&hl=true&indent=true&q.op=AND&q=(subjects%3A%20%22economics%22%20OR%20text%3A%22economics%22%20OR%20title%3A%22economics%22)%20(subjects%3A%20%22home%22%20OR%20text%3A%22home%22%20OR%20title%3A%22home%22)",
@@ -22,7 +22,7 @@ for system, url in query.items():
     results = [x['id'] for x in results]
 
     qe = EvaluateQuery(results, relevant)
-    path = f'q1/{system}'
+    path = f'q2/{system}'
     # checking if the directory demo_folder2
     # exist or not.
     if not os.path.isdir(path):
