@@ -105,12 +105,12 @@
         {
             "name": "year_of_birth",
             "type": "DateRangeFieldType",
-            "indexed": false
+            "indexed": true
         },
         {
             "name": "year_of_death",
             "type": "DateRangeFieldType",
-            "indexed": false
+            "indexed": true
         },
         {
             "name": "date",
