@@ -49,15 +49,15 @@ for system, url in query.items():
 # plt set legend
 
 # create a figure
-fig = plt.figure(figsize=(10, 10))
+#fig = plt.figure(figsize=(10, 10))
 # create a ax
-ax = fig.add_subplot(111)
+#ax = fig.add_subplot(111)
 # plot the data
 for graph in graphs:
-    graph.plot(ax=ax)
+    graph.plot()
 
 # save the figure
-fig.savefig('q1/precision_recall_global.png')
+plt.savefig('q1/precision_recall_global.png')
 # disp.plot(ax=ax, name="Micro-average precision-recall", color="red", linewidth=1, linestyle=":",)
 
 
