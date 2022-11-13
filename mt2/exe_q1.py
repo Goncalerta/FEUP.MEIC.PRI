@@ -16,8 +16,11 @@ relevant = list(map(lambda el: el.strip(), open(QRELS_FILE).readlines()))
 
 results_dict = {}
 
+# create 
+
+fig, ax = plt.subplots()
 # plt change y axis to 0-1
-plt.ylim(0, 1)
+ax.ylim(0, 1)
 
 for system, url in query.items():
     # Read qrels to extract relevant documents
@@ -39,13 +42,13 @@ for system, url in query.items():
         os.makedirs(path)
 
     qe.export_metrics(path)
-    qe.plot_precision_recall(path)
+    qe.plot_precision_recall(path, ax)
     qe.export_ap(path)
 
 #qe.plot_precision_recall("q1", ["q1/sys1", "q1/sys2", "q1/sys1_syn", "q1/sys2_syn"])
 
 # plt set legend
-plt.legend(["sys1", "sys2", "sys1_syn", "sys2_syn"])
+ax.legend(["sys1", "sys2", "sys1_syn", "sys2_syn"])
 
 plt.savefig('q1/precision_recall.pdf')
 
