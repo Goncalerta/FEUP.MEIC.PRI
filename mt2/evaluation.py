@@ -19,7 +19,7 @@ def ap(results, relevant):
         ]) / idx
         for idx in range(1, len(results))
     ]
-    return sum(precision_values)/len(precision_values)
+    return sum(precision_values)/len(precision_values) if precision_values else 0
 
 
 @metric
@@ -65,6 +65,10 @@ class EvaluateQuery:
     def plot_precision_recall(self, filepath):
         # PRECISION-RECALL CURVE
         # Calculate precision and recall values as we move down the ranked list
+
+        if not self.results:
+            return
+
         precision_values = [
             len([
                 val

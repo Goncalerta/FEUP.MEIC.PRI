@@ -2,6 +2,7 @@
 
 precreate-core books
 precreate-core books_syn
+precreate-core books_schemaless
 
 cp /data/enumsConfig.xml /var/solr/data/books/enumsConfig.xml
 cp /data/enumsConfig.xml /var/solr/data/books_syn/enumsConfig.xml
@@ -25,6 +26,9 @@ bin/post -c books /data/books/*.xml
 
 # Populate collection
 bin/post -c books_syn /data/books/*.xml
+
+# Populate collection
+bin/post -c books /data/books_schemaless/*.xml
 
 # Restart in foreground mode so we can access the interface
 solr restart -f

@@ -5,12 +5,10 @@ import os
 QRELS_FILE = "./q2/qrels.txt"
 
 query = {
-    "sys1": "http://localhost:8983/solr/books/select?df=text&hl.fl=*&hl=true&indent=true&q.op=AND&q=(subjects%3A%20%22economics%22%20OR%20text%3A%22economics%22%20OR%20title%3A%22economics%22)%20(subjects%3A%20%22home%22%20OR%20text%3A%22home%22%20OR%20title%3A%22home%22)",
-    "sys2": "http://localhost:8983/solr/books/select?hl.fl=*&hl=true&indent=true&q.op=AND&q=(subjects%3A%20economics%20OR%20text%3Aecon*%20OR%20title%3Aecon*)%5E2%20(subjects%3A%20%22home%22~%20OR%20text%3A%22home%22~%20OR%20title%3A%22home%22~%20)",
-    "sys3": "http://localhost:8983/solr/books/select?hl.fl=*&hl=true&indent=true&q.op=AND&q=((subjects%3A%20econ*)%5E1.5%20OR%20text%3Aecon*%20OR%20title%3Aecon*)%5E2%20((subjects%3A%20%22home%22~)%5E1.5%20OR%20text%3A%22home%22~%20OR%20title%3A%22home%22~%20)",
-    "sys1_syn": "http://localhost:8983/solr/books_syn/select?df=text&hl.fl=*&hl=true&indent=true&q.op=AND&q=(subjects%3A%20%22economics%22%20OR%20text%3A%22economics%22%20OR%20title%3A%22economics%22)%20(subjects%3A%20%22home%22%20OR%20text%3A%22home%22%20OR%20title%3A%22home%22)",
-    "sys2_syn": "http://localhost:8983/solr/books_syn/select?hl.fl=*&hl=true&indent=true&q.op=AND&q=(subjects%3A%20economics%20OR%20text%3Aecon*%20OR%20title%3Aecon*)%5E2%20(subjects%3A%20%22home%22~%20OR%20text%3A%22home%22~%20OR%20title%3A%22home%22~%20)",
-    "sys3_syn": "http://localhost:8983/solr/books_syn/select?hl.fl=*&hl=true&indent=true&q.op=AND&q=((subjects%3A%20econ*)%5E1.5%20OR%20text%3Aecon*%20OR%20title%3Aecon*)%5E2%20((subjects%3A%20%22home%22~)%5E1.5%20OR%20text%3A%22home%22~%20OR%20title%3A%22home%22~%20)"
+    "sys1": "http://localhost:8983/solr/books/select?defType=edismax&fl=id%2C%20title%2C%20release_date%2C%20subjects%2C%20content_type%2C%20text%2C%20last_name%2C%20first_name%2C%20authors%2C%20%5Bchild%20fl%3D%22first_name%2Clast_name%22%5D&hl.fl=text&hl=true&indent=true&q.op=AND&q=subjects%3Afiction%20(subjects%3Alove%20text%3Alove)",
+    "sys2": "http://localhost:8983/solr/books/select?bq=release_date%3A%5BNOW%2FDAY-6YEAR%20TO%20NOW%2FDAY-2YEAR%5D&defType=edismax&fl=id%2C%20title%2C%20release_date%2C%20subjects%2C%20content_type%2C%20text%2C%20last_name%2C%20first_name%2C%20authors%2C%20%5Bchild%20fl%3D%22first_name%2Clast_name%22%5D&hl.fl=text&hl=true&indent=true&q.op=AND&q=subjects%3Afiction%20(subjects%3Alov*%5E2%20text%3Alov*)",
+    "sys1_syn": "http://localhost:8983/solr/books_syn/select?defType=edismax&fl=id%2C%20title%2C%20release_date%2C%20subjects%2C%20content_type%2C%20text%2C%20last_name%2C%20first_name%2C%20authors%2C%20%5Bchild%20fl%3D%22first_name%2Clast_name%22%5D&hl.fl=text&hl=true&indent=true&q.op=AND&q=subjects%3Afiction%20(subjects%3Alove%20text%3Alove)",
+    "sys2_syn": "http://localhost:8983/solr/books_syn/select?bq=release_date%3A%5BNOW%2FDAY-6YEAR%20TO%20NOW%2FDAY-2YEAR%5D&defType=edismax&fl=id%2C%20title%2C%20release_date%2C%20subjects%2C%20content_type%2C%20text%2C%20last_name%2C%20first_name%2C%20authors%2C%20%5Bchild%20fl%3D%22first_name%2Clast_name%22%5D&hl.fl=text&hl=true&indent=true&q.op=AND&q=subjects%3Afiction%20(subjects%3Alov*%5E2%20text%3Alov*)",
 }
 
 for system, url in query.items():
