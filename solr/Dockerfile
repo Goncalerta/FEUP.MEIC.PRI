@@ -1,3 +1,5 @@
+FROM solr:8.10
+
 ADD merge /data/books
 
 COPY enumsConfig.xml /data/enumsConfig.xml
