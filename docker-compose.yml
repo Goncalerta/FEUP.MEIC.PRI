@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+    solr:
+        container_name: solr
+        build:
+            context: ./solr
+        ports:
+            - ${SOLR_PORT}:8983
+        environment:
+            - SOLR_SYS=${SOLR_SYS}
+
+    django:
+        container_name: django
+        build:
+            context: ./backend
+        depends_on:
+            - solr
+        command: sh -c "python manage.py runserver 0.0.0.0:8000"
+        volumes:
+            - ./backend:/app/backend
+        ports:
+            - ${DJANGO_PORT}:8000
+        environment:
+            - SOLR_HOST=${SOLR_IP}
+            - SOLR_PORT=${SOLR_PORT}
+            - DJANGO_SERVER_IP=${DJANGO_IP}
+
+    react:
+        container_name: react
+        build:
+            context: ./frontend
+        depends_on:
+            - django
+        ports:
+            - ${REACT_PORT}:3000
+        volumes:
+            - ./frontend/src:/app/frontend/src
+        environment:
+            - REACT_APP_BACKEND_HOST=${DJANGO_IP}
+            - REACT_APP_BACKEND_PORT=${DJANGO_PORT}

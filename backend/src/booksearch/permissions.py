@@ -1,0 +1,1 @@
+""" Booksearch views permissions """
