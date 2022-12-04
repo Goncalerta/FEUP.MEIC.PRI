@@ -24,35 +24,35 @@ View example pages here. (https://demos.creative-tim.com/material-kit-react/#/pa
 
 **HELPFUL LINKS**
 
-- View [Github Repository](https://github.com/creativetimofficial/material-kit-react)
-- Check [FAQ Page](https://www.creative-tim.com/faq)
+-   View [Github Repository](https://github.com/creativetimofficial/material-kit-react)
+-   Check [FAQ Page](https://www.creative-tim.com/faq)
 
 #### Special thanks
 
 During the development of this dashboard, we have used many existing resources from awesome developers. We want to thank them for providing their tools open source:
 
-- [MUI](https://mui.com/) - The React UI library for faster and easier web development.
-- [React Flatpickr](https://github.com/haoxins/react-flatpickr) - Useful library used to select date.
-- [React Copy to Clipboard](https://github.com/nkbt/react-copy-to-clipboard) - Useful library used for copying data to the clipboard.
-- [React Countup](https://github.com/glennreyes/react-countup) - A lightweight React component that can be used to quickly create animations that display numerical data in a more interesting way.
-- [React Syntax Highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter) - Syntax highlighting component for react with prismjs or highlightjs ast using inline styles.
-- [ChromaJS](https://gka.github.io/chroma.js/) - A small-ish zero-dependency JavaScript library for all kinds of color conversions and color scales.
+-   [MUI](https://mui.com/) - The React UI library for faster and easier web development.
+-   [React Flatpickr](https://github.com/haoxins/react-flatpickr) - Useful library used to select date.
+-   [React Copy to Clipboard](https://github.com/nkbt/react-copy-to-clipboard) - Useful library used for copying data to the clipboard.
+-   [React Countup](https://github.com/glennreyes/react-countup) - A lightweight React component that can be used to quickly create animations that display numerical data in a more interesting way.
+-   [React Syntax Highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter) - Syntax highlighting component for react with prismjs or highlightjs ast using inline styles.
+-   [ChromaJS](https://gka.github.io/chroma.js/) - A small-ish zero-dependency JavaScript library for all kinds of color conversions and color scales.
 
 Let us know your thoughts below. And good luck with development!
 
 ## Table of Contents
 
-- [Versions](#versions)
-- [Demo](#demo)
-- [Quick Start](#quick-start)
-- [Documentation](#documentation)
-- [File Structure](#file-structure)
-- [Browser Support](#browser-support)
-- [Resources](#resources)
-- [Reporting Issues](#reporting-issues)
-- [Technical Support or Questions](#technical-support-or-questions)
-- [Licensing](#licensing)
-- [Useful Links](#useful-links)
+-   [Versions](#versions)
+-   [Demo](#demo)
+-   [Quick Start](#quick-start)
+-   [Documentation](#documentation)
+-   [File Structure](#file-structure)
+-   [Browser Support](#browser-support)
+-   [Resources](#resources)
+-   [Reporting Issues](#reporting-issues)
+-   [Technical Support or Questions](#technical-support-or-questions)
+-   [Licensing](#licensing)
+-   [Useful Links](#useful-links)
 
 ## Versions
 
@@ -65,10 +65,10 @@ Let us know your thoughts below. And good luck with development!
 
 ## Demo
 
-- [About Us](https://demos.creative-tim.com/material-kit-react/#/pages/landing-pages/about-us?ref=readme-mkr)
-- [Contact Us](https://demos.creative-tim.com/material-kit-react/#/pages/landing-pages/contact-us?ref=readme-mkr)
-- [Author](https://demos.creative-tim.com/material-kit-react/#/pages/landing-pages/author?ref=readme-mkr)
-- [Pricing page](https://demos.creative-tim.com/material-kit-react/#/pages/authentication/sign-in?ref=readme-mkr)
+-   [About Us](https://demos.creative-tim.com/material-kit-react/#/pages/landing-pages/about-us?ref=readme-mkr)
+-   [Contact Us](https://demos.creative-tim.com/material-kit-react/#/pages/landing-pages/contact-us?ref=readme-mkr)
+-   [Author](https://demos.creative-tim.com/material-kit-react/#/pages/landing-pages/author?ref=readme-mkr)
+-   [Pricing page](https://demos.creative-tim.com/material-kit-react/#/pages/authentication/sign-in?ref=readme-mkr)
 
 [View More](https://demos.creative-tim.com/material-kit-react/#/?ref=readme-mkr).
 
@@ -76,7 +76,7 @@ Let us know your thoughts below. And good luck with development!
 
 Quick start options:
 
-- Download from [Creative Tim](https://www.creative-tim.com/product/material-kit-react?ref=readme-mkr).
+-   Download from [Creative Tim](https://www.creative-tim.com/product/material-kit-react?ref=readme-mkr).
 
 ## Terminal Commands
 
@@ -160,12 +160,12 @@ At present, we officially aim to support the last two versions of the following 
 
 ## Resources
 
-- [Live Preview](https://demos.creative-tim.com/material-kit-react/#/?ref=readme-mkr)
-- [Buy Page](https://www.creative-tim.com/product/material-kit-react?ref=readme-mkr)
-- Documentation is [here](https://www.creative-tim.com/learning-lab/react/overview/material-kit/?ref=readme-mkr)
-- [License Agreement](https://www.creative-tim.com/license?ref=readme-mkr)
-- [Support](https://www.creative-tim.com/contact-us?ref=readme-mkr)
-- Issues: [Github Issues Page](https://github.com/creativetimofficial/ct-material-kit-react/issues)
+-   [Live Preview](https://demos.creative-tim.com/material-kit-react/#/?ref=readme-mkr)
+-   [Buy Page](https://www.creative-tim.com/product/material-kit-react?ref=readme-mkr)
+-   Documentation is [here](https://www.creative-tim.com/learning-lab/react/overview/material-kit/?ref=readme-mkr)
+-   [License Agreement](https://www.creative-tim.com/license?ref=readme-mkr)
+-   [Support](https://www.creative-tim.com/contact-us?ref=readme-mkr)
+-   Issues: [Github Issues Page](https://github.com/creativetimofficial/ct-material-kit-react/issues)
 
 ## Reporting Issues
 
@@ -181,18 +181,18 @@ If you have questions or need help integrating the product please [contact us](h
 
 ## Licensing
 
-- Copyright 2021 [Creative Tim](https://www.creative-tim.com?ref=readme-mkr)
-- Creative Tim [license](https://www.creative-tim.com/license?ref=readme-mkr)
+-   Copyright 2021 [Creative Tim](https://www.creative-tim.com?ref=readme-mkr)
+-   Creative Tim [license](https://www.creative-tim.com/license?ref=readme-mkr)
 
 ## Useful Links
 
-- [More products](https://www.creative-tim.com/templates?ref=readme-mkr) from Creative Tim
+-   [More products](https://www.creative-tim.com/templates?ref=readme-mkr) from Creative Tim
 
-- [Tutorials](https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w)
+-   [Tutorials](https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w)
 
-- [Freebies](https://www.creative-tim.com/bootstrap-themes/free?ref=readme-mkr) from Creative Tim
+-   [Freebies](https://www.creative-tim.com/bootstrap-themes/free?ref=readme-mkr) from Creative Tim
 
-- [Affiliate Program](https://www.creative-tim.com/affiliates/new?ref=readme-mkr) (earn money)
+-   [Affiliate Program](https://www.creative-tim.com/affiliates/new?ref=readme-mkr) (earn money)
 
 ##### Social Media
 

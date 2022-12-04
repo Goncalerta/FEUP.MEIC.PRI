@@ -29,20 +29,20 @@ import team3 from "assets/images/team-3.jpg";
 import team4 from "assets/images/team-4.jpg";
 
 function AvatarGroup() {
-  return (
-    <MKBox component="section" py={12}>
-      <Container>
-        <Grid container justifyContent="center">
-          <MuiAvatarGroup spacing={12}>
-            <MKAvatar src={team1} alt="team 1" size="lg" />
-            <MKAvatar src={team2} alt="team 2" size="lg" />
-            <MKAvatar src={team3} alt="team 3" size="lg" />
-            <MKAvatar src={team4} alt="team 4" size="lg" />
-          </MuiAvatarGroup>
-        </Grid>
-      </Container>
-    </MKBox>
-  );
+    return (
+        <MKBox component="section" py={12}>
+            <Container>
+                <Grid container justifyContent="center">
+                    <MuiAvatarGroup spacing={12}>
+                        <MKAvatar src={team1} alt="team 1" size="lg" />
+                        <MKAvatar src={team2} alt="team 2" size="lg" />
+                        <MKAvatar src={team3} alt="team 3" size="lg" />
+                        <MKAvatar src={team4} alt="team 4" size="lg" />
+                    </MuiAvatarGroup>
+                </Grid>
+            </Container>
+        </MKBox>
+    );
 }
 
 export default AvatarGroup;

@@ -34,34 +34,34 @@ import buttonsIconLeftCode from "layouts/sections/elements/buttons/components/Bu
 import buttonsIconRightCode from "layouts/sections/elements/buttons/components/ButtonsIconRight/code";
 
 function Buttons() {
-  return (
-    <BaseLayout
-      title="Buttons"
-      breadcrumb={[
-        { label: "Page Sections", route: "/sections/elements/buttons" },
-        { label: "Buttons" },
-      ]}
-    >
-      <View title="Buttons gradient" code={buttonsGradientCode}>
-        <ButtonsGradient />
-      </View>
-      <View title="Buttons contained" code={buttonsContainedCode}>
-        <ButtonsContained />
-      </View>
-      <View title="Buttons outlined" code={buttonsOutlinedCode}>
-        <ButtonsOutlined />
-      </View>
-      <View title="Buttons sizes" code={buttonsSizesCode}>
-        <ButtonsSizes />
-      </View>
-      <View title="Buttons icon left" code={buttonsIconLeftCode}>
-        <ButtonsIconLeft />
-      </View>
-      <View title="Buttons icon right" code={buttonsIconRightCode}>
-        <ButtonsIconRight />
-      </View>
-    </BaseLayout>
-  );
+    return (
+        <BaseLayout
+            title="Buttons"
+            breadcrumb={[
+                { label: "Page Sections", route: "/sections/elements/buttons" },
+                { label: "Buttons" },
+            ]}
+        >
+            <View title="Buttons gradient" code={buttonsGradientCode}>
+                <ButtonsGradient />
+            </View>
+            <View title="Buttons contained" code={buttonsContainedCode}>
+                <ButtonsContained />
+            </View>
+            <View title="Buttons outlined" code={buttonsOutlinedCode}>
+                <ButtonsOutlined />
+            </View>
+            <View title="Buttons sizes" code={buttonsSizesCode}>
+                <ButtonsSizes />
+            </View>
+            <View title="Buttons icon left" code={buttonsIconLeftCode}>
+                <ButtonsIconLeft />
+            </View>
+            <View title="Buttons icon right" code={buttonsIconRightCode}>
+                <ButtonsIconRight />
+            </View>
+        </BaseLayout>
+    );
 }
 
 export default Buttons;

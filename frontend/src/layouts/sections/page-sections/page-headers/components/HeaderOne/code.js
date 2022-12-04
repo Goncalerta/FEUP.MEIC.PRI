@@ -1,6 +1,6 @@
 /* eslint-disable no-template-curly-in-string */
 const bgImage =
-  "`${linearGradient(rgba(gradients.dark.main, 0.5), rgba(gradients.dark.state, 0.5))}, url(${bgImage})`";
+    "`${linearGradient(rgba(gradients.dark.main, 0.5), rgba(gradients.dark.state, 0.5))}, url(${bgImage})`";
 
 const headerOneCode = `// @mui material components
 import Container from "@mui/material/Container";

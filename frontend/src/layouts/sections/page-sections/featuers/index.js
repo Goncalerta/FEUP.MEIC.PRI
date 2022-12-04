@@ -24,19 +24,19 @@ import FeaturesOne from "layouts/sections/page-sections/featuers/components/Feat
 import featuresOneCode from "layouts/sections/page-sections/featuers/components/FeaturesOne/code";
 
 function Features() {
-  return (
-    <BaseLayout
-      title="Features"
-      breadcrumb={[
-        { label: "Page Sections", route: "/sections/page-sections/features" },
-        { label: "Features" },
-      ]}
-    >
-      <View title="Features 1" code={featuresOneCode}>
-        <FeaturesOne />
-      </View>
-    </BaseLayout>
-  );
+    return (
+        <BaseLayout
+            title="Features"
+            breadcrumb={[
+                { label: "Page Sections", route: "/sections/page-sections/features" },
+                { label: "Features" },
+            ]}
+        >
+            <View title="Features 1" code={featuresOneCode}>
+                <FeaturesOne />
+            </View>
+        </BaseLayout>
+    );
 }
 
 export default Features;

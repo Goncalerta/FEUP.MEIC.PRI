@@ -23,11 +23,11 @@ const { md } = boxShadows;
 const { borderRadius } = borders;
 
 export default {
-  styleOverrides: {
-    root: {
-      backgroundColor: white.main,
-      boxShadow: md,
-      borderRadius: borderRadius.xl,
+    styleOverrides: {
+        root: {
+            backgroundColor: white.main,
+            boxShadow: md,
+            borderRadius: borderRadius.xl,
+        },
     },
-  },
 };

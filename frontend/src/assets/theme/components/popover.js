@@ -23,11 +23,11 @@ const { lg } = boxShadows;
 const { borderRadius } = borders;
 
 export default {
-  styleOverrides: {
-    paper: {
-      backgroundColor: transparent.main,
-      boxShadow: lg,
-      borderRadius: borderRadius.md,
+    styleOverrides: {
+        paper: {
+            backgroundColor: transparent.main,
+            boxShadow: lg,
+            borderRadius: borderRadius.md,
+        },
     },
-  },
 };

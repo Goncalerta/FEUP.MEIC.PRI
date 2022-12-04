@@ -30,35 +30,35 @@ import Presentation from "layouts/pages/presentation";
 import routes from "routes";
 
 export default function App() {
-  const { pathname } = useLocation();
+    const { pathname } = useLocation();
 
-  // Setting page scroll to 0 when changing the route
-  useEffect(() => {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-  }, [pathname]);
+    // Setting page scroll to 0 when changing the route
+    useEffect(() => {
+        document.documentElement.scrollTop = 0;
+        document.scrollingElement.scrollTop = 0;
+    }, [pathname]);
 
-  const getRoutes = (allRoutes) =>
-    allRoutes.map((route) => {
-      if (route.collapse) {
-        return getRoutes(route.collapse);
-      }
+    const getRoutes = (allRoutes) =>
+        allRoutes.map((route) => {
+            if (route.collapse) {
+                return getRoutes(route.collapse);
+            }
 
-      if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
-      }
+            if (route.route) {
+                return <Route exact path={route.route} element={route.component} key={route.key} />;
+            }
 
-      return null;
-    });
+            return null;
+        });
 
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Routes>
-        {getRoutes(routes)}
-        <Route path="/presentation" element={<Presentation />} />
-        <Route path="*" element={<Navigate to="/presentation" />} />
-      </Routes>
-    </ThemeProvider>
-  );
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Routes>
+                {getRoutes(routes)}
+                <Route path="/" element={<Presentation />} />
+                <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+        </ThemeProvider>
+    );
 }

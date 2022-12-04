@@ -17,5 +17,5 @@ Coded by www.creative-tim.com
 import Presentation from "pages/Presentation";
 
 export default function PresentationPage() {
-  return <Presentation />;
+    return <Presentation />;
 }

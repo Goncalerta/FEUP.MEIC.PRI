@@ -18,7 +18,7 @@ Coded by www.creative-tim.com
  */
 
 function pxToRem(number, baseNumber = 16) {
-  return `${number / baseNumber}rem`;
+    return `${number / baseNumber}rem`;
 }
 
 export default pxToRem;

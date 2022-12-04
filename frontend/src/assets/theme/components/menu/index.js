@@ -28,20 +28,20 @@ const { text, white } = colors;
 const { borderRadius } = borders;
 
 export default {
-  defaultProps: {
-    disableAutoFocusItem: true,
-  },
-
-  styleOverrides: {
-    paper: {
-      minWidth: pxToRem(160),
-      boxShadow: lg,
-      padding: `${pxToRem(16)} ${pxToRem(8)}`,
-      fontSize: size.sm,
-      color: text.main,
-      textAlign: "left",
-      backgroundColor: `${white.main} !important`,
-      borderRadius: borderRadius.md,
+    defaultProps: {
+        disableAutoFocusItem: true,
     },
-  },
+
+    styleOverrides: {
+        paper: {
+            minWidth: pxToRem(160),
+            boxShadow: lg,
+            padding: `${pxToRem(16)} ${pxToRem(8)}`,
+            fontSize: size.sm,
+            color: text.main,
+            textAlign: "left",
+            backgroundColor: `${white.main} !important`,
+            borderRadius: borderRadius.md,
+        },
+    },
 };

@@ -36,37 +36,37 @@ import inputErrorCode from "layouts/sections/input-areas/inputs/components/Input
 import inputDisabledCode from "layouts/sections/input-areas/inputs/components/InputDisabled/code";
 
 function Inputs() {
-  return (
-    <BaseLayout
-      title="Inputs"
-      breadcrumb={[
-        { label: "Page Sections", route: "/sections/input-areas/inputs" },
-        { label: "Inputs" },
-      ]}
-    >
-      <View title="Input dynamic" code={inputDynamicCode}>
-        <InputDynamic />
-      </View>
-      <View title="Input static" code={inputStaticCode}>
-        <InputStatic />
-      </View>
-      <View title="Input outlined" code={inputOutlinedCode}>
-        <InputOutlined />
-      </View>
-      <View title="Input icon" code={inputIconCode}>
-        <InputIcon />
-      </View>
-      <View title="Input success" code={inputSuccessCode}>
-        <InputSuccess />
-      </View>
-      <View title="Input error" code={inputErrorCode}>
-        <InputError />
-      </View>
-      <View title="Input disabled" code={inputDisabledCode}>
-        <InputDisabled />
-      </View>
-    </BaseLayout>
-  );
+    return (
+        <BaseLayout
+            title="Inputs"
+            breadcrumb={[
+                { label: "Page Sections", route: "/sections/input-areas/inputs" },
+                { label: "Inputs" },
+            ]}
+        >
+            <View title="Input dynamic" code={inputDynamicCode}>
+                <InputDynamic />
+            </View>
+            <View title="Input static" code={inputStaticCode}>
+                <InputStatic />
+            </View>
+            <View title="Input outlined" code={inputOutlinedCode}>
+                <InputOutlined />
+            </View>
+            <View title="Input icon" code={inputIconCode}>
+                <InputIcon />
+            </View>
+            <View title="Input success" code={inputSuccessCode}>
+                <InputSuccess />
+            </View>
+            <View title="Input error" code={inputErrorCode}>
+                <InputError />
+            </View>
+            <View title="Input disabled" code={inputDisabledCode}>
+                <InputDisabled />
+            </View>
+        </BaseLayout>
+    );
 }
 
 export default Inputs;

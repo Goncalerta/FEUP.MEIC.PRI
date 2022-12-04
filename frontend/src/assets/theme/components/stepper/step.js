@@ -17,9 +17,9 @@ Coded by www.creative-tim.com
 import pxToRem from "assets/theme/functions/pxToRem";
 
 export default {
-  styleOverrides: {
-    root: {
-      padding: `0 ${pxToRem(6)}`,
+    styleOverrides: {
+        root: {
+            padding: `0 ${pxToRem(6)}`,
+        },
     },
-  },
 };

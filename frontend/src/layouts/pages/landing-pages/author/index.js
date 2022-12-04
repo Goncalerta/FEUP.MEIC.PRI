@@ -17,5 +17,5 @@ Coded by www.creative-tim.com
 import Author from "pages/LandingPages/Author";
 
 export default function AuthorPage() {
-  return <Author />;
+    return <Author />;
 }

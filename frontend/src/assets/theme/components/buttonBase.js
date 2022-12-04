@@ -14,7 +14,7 @@ Coded by www.creative-tim.com
 */
 
 export default {
-  defaultProps: {
-    disableRipple: false,
-  },
+    defaultProps: {
+        disableRipple: false,
+    },
 };

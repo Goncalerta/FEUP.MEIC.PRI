@@ -22,7 +22,7 @@ Coded by www.creative-tim.com
 import chroma from "chroma-js";
 
 function hexToRgb(color) {
-  return chroma(color).rgb().join(", ");
+    return chroma(color).rgb().join(", ");
 }
 
 export default hexToRgb;

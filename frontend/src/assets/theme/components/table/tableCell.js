@@ -24,10 +24,10 @@ const { borderWidth } = borders;
 const { light } = colors;
 
 export default {
-  styleOverrides: {
-    root: {
-      padding: `${pxToRem(12)} ${pxToRem(16)}`,
-      borderBottom: `${borderWidth[1]} solid ${light.main}`,
+    styleOverrides: {
+        root: {
+            padding: `${pxToRem(12)} ${pxToRem(16)}`,
+            borderBottom: `${borderWidth[1]} solid ${light.main}`,
+        },
     },
-  },
 };

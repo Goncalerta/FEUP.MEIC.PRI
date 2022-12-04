@@ -17,5 +17,5 @@ Coded by www.creative-tim.com
 import ContactUs from "pages/LandingPages/ContactUs";
 
 export default function ContactUsPage() {
-  return <ContactUs />;
+    return <ContactUs />;
 }

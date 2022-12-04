@@ -28,25 +28,25 @@ import badgesSimpleCode from "layouts/sections/elements/badges/components/Badges
 import badgesSimpleRoundedCode from "layouts/sections/elements/badges/components/BadgesSimpleRounded/code";
 
 function Badges() {
-  return (
-    <BaseLayout
-      title="Badges"
-      breadcrumb={[
-        { label: "Page Sections", route: "/sections/elements/badges" },
-        { label: "Badges" },
-      ]}
-    >
-      <View title="Badges gradient" code={badgesGradientCode}>
-        <BadgesGradient />
-      </View>
-      <View title="Badges simple" code={badgesSimpleCode}>
-        <BadgesSimple />
-      </View>
-      <View title="Badges simple rounded" code={badgesSimpleRoundedCode}>
-        <BadgesSimpleRounded />
-      </View>
-    </BaseLayout>
-  );
+    return (
+        <BaseLayout
+            title="Badges"
+            breadcrumb={[
+                { label: "Page Sections", route: "/sections/elements/badges" },
+                { label: "Badges" },
+            ]}
+        >
+            <View title="Badges gradient" code={badgesGradientCode}>
+                <BadgesGradient />
+            </View>
+            <View title="Badges simple" code={badgesSimpleCode}>
+                <BadgesSimple />
+            </View>
+            <View title="Badges simple rounded" code={badgesSimpleRoundedCode}>
+                <BadgesSimpleRounded />
+            </View>
+        </BaseLayout>
+    );
 }
 
 export default Badges;

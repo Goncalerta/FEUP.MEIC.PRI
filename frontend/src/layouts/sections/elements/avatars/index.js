@@ -26,22 +26,22 @@ import avatarGroupCode from "layouts/sections/elements/avatars/components/Avatar
 import avatarSizeCode from "layouts/sections/elements/avatars/components/AvatarSize/code";
 
 function Avatars() {
-  return (
-    <BaseLayout
-      title="Avatars"
-      breadcrumb={[
-        { label: "Page Sections", route: "/sections/elements/avatars" },
-        { label: "Avatars" },
-      ]}
-    >
-      <View title="Avatar Group" code={avatarGroupCode}>
-        <AvatarGroup />
-      </View>
-      <View title="Avatar Size" code={avatarSizeCode}>
-        <AvatarSize />
-      </View>
-    </BaseLayout>
-  );
+    return (
+        <BaseLayout
+            title="Avatars"
+            breadcrumb={[
+                { label: "Page Sections", route: "/sections/elements/avatars" },
+                { label: "Avatars" },
+            ]}
+        >
+            <View title="Avatar Group" code={avatarGroupCode}>
+                <AvatarGroup />
+            </View>
+            <View title="Avatar Size" code={avatarSizeCode}>
+                <AvatarSize />
+            </View>
+        </BaseLayout>
+    );
 }
 
 export default Avatars;

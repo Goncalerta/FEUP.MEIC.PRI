@@ -23,22 +23,22 @@ const { size } = typography;
 const { borderWidth } = borders;
 
 export default {
-  styleOverrides: {
-    root: {
-      fontSize: size.sm,
-      color: dark.main,
+    styleOverrides: {
+        root: {
+            fontSize: size.sm,
+            color: dark.main,
 
-      "&:hover:not(.Mui-disabled):before": {
-        borderBottom: `${borderWidth[1]} solid ${inputBorderColor}`,
-      },
+            "&:hover:not(.Mui-disabled):before": {
+                borderBottom: `${borderWidth[1]} solid ${inputBorderColor}`,
+            },
 
-      "&:before": {
-        borderColor: inputBorderColor,
-      },
+            "&:before": {
+                borderColor: inputBorderColor,
+            },
 
-      "&:after": {
-        borderColor: info.main,
-      },
+            "&:after": {
+                borderColor: info.main,
+            },
+        },
     },
-  },
 };

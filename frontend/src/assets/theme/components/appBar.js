@@ -14,13 +14,13 @@ Coded by www.creative-tim.com
 */
 
 export default {
-  defaultProps: {
-    color: "transparent",
-  },
-
-  styleOverrides: {
-    root: {
-      boxShadow: "none",
+    defaultProps: {
+        color: "transparent",
     },
-  },
+
+    styleOverrides: {
+        root: {
+            boxShadow: "none",
+        },
+    },
 };
