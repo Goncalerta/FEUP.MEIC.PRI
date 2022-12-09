@@ -4,7 +4,7 @@ import re
 from datetime import datetime
 import xml.etree.cElementTree as ET
 
-MAX_FILES = 8000
+MAX_FILES = 14581
 
 files = os.listdir("output/books")
 
@@ -128,7 +128,7 @@ def parse_element(doc, key, value):
             parse_element(subdoc, k, v)
     else:
         ET.SubElement(doc, "field", name=key).text = str.encode(
-            value).decode('utf-8')
+            str(value)).decode('utf-8')
 
 
 for file in data:

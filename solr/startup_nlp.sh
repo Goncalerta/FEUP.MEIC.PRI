@@ -2,12 +2,14 @@
 
 precreate-core books
 
-# Start Solr in background mode so we can use the API to upload the schema
-sed -i $'/<\/config>/{e cat config.xml\n}' /var/solr/data/books/conf/solrconfig.xml
-
-solr start -Dsolr.ltr.enabled=true
+cp /data/enumsConfig.xml /var/solr/data/books/enumsConfig.xml
 
 cp /data/synonyms.txt /var/solr/data/books/conf
+
+# Start Solr in background mode so we can use the API to upload the schema
+sed -i $'/<\/config>/{e cat /data/config.xml\n}' /var/solr/data/books/conf/solrconfig.xml
+
+solr start -Dsolr.ltr.enabled=true
 
 cp /models/en-ner-person.bin /var/solr/data/books/conf/en-ner-person.bin
 
@@ -33,7 +35,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary @/data/books_schem
 sleep 10
 
 # Populate collection
-bin/post -c books /data/books/*.json
+bin/post -c books /data/books/*.xml
 
 # Restart in foreground mode so we can access the interface
 solr restart -f
