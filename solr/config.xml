@@ -20,23 +20,23 @@
 <updateRequestProcessorChain name="add-unknown-fields-to-the-schema" default="${update.autoCreateFields:true}" processor="uuid,remove-blank,field-name-mutating,parse-boolean,parse-long,parse-double,parse-date,add-schema-fields">
     <processor class="solr.LogUpdateProcessorFactory"/>
     <processor class="solr.DistributedUpdateProcessorFactory"/>
-    <!--<processor class="solr.OpenNLPExtractNamedEntitiesUpdateProcessorFactory">
+    <processor class="solr.OpenNLPExtractNamedEntitiesUpdateProcessorFactory">
       <str name="modelFile">conf/en-ner-person.bin</str>
-      <str name="analyzerFieldType">GeneralTextField</str>
+      <str name="analyzerFieldType">NLPText</str>
       <str name="source">text</str>
       <str name="dest">person_book</str>
    </processor>
    <processor class="solr.OpenNLPExtractNamedEntitiesUpdateProcessorFactory">
       <str name="modelFile">conf/en-ner-location.bin</str>
-      <str name="analyzerFieldType">GeneralTextField</str>
+      <str name="analyzerFieldType">NLPText</str>
       <str name="source">text</str>
       <str name="dest">location_book</str>
    </processor>
    <processor class="solr.OpenNLPExtractNamedEntitiesUpdateProcessorFactory">
       <str name="modelFile">conf/en-ner-date.bin</str>
-      <str name="analyzerFieldType">GeneralTextField</str>
+      <str name="analyzerFieldType">NLPText</str>
       <str name="source">text</str>
       <str name="dest">date_book</str>
-   </processor>-->
+   </processor>
    <processor class="solr.RunUpdateProcessorFactory"/>
 </updateRequestProcessorChain> 
