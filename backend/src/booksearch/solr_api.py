@@ -56,3 +56,9 @@ def make_query_quote(q="", fl="*, [child]", rows=10, start=0, sort="score desc",
         "did_you_mean": result,
         "docs": make_query_raw(f"q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
     }
+
+
+def get_categories():
+    facets = make_query_raw("q=content_type:BOOK&q.op=OR&indent=true&facet=true&facet.field=subjects_facet&facet.limit=-1&rows=0")[
+        "facet_counts"]["facet_fields"]["subjects_facet"]
+    return [facets[i] for i in range(0, len(facets), 2)]

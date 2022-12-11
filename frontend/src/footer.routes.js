@@ -6,7 +6,6 @@ import logoCT from "assets/images/logo-ct-dark.png";
 
 const date = new Date().getFullYear();
 
-// TODO footer routes
 export default {
     brand: {
         name: "Booksearch",

@@ -16,7 +16,7 @@ async function apiGet(route, payload = {}) {
     console.log(`http://${BACKEND_SERVER}${route}`);
 
     return axios.get(
-        `http://${BACKEND_SERVER}${route}`,
+        `http://${BACKEND_SERVER}${route}/`,
         {
             ...payload,
         },

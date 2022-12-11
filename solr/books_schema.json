@@ -68,6 +68,13 @@
             "multiValued": true
         },
         {
+            "name": "subjects_facet",
+            "type": "string",
+            "indexed": true,
+            "stored": false,
+            "multiValued": true
+        },
+        {
             "name": "rating",
             "type": "pfloat",
             "indexed": true
@@ -127,5 +134,9 @@
             "type": "plong",
             "indexed": false
         }
-    ]
+    ],
+    "add-copy-field":{
+        "source":"subjects",
+        "dest":[ "subjects_facet" ]
+    }
 }
