@@ -12,8 +12,10 @@ COPY books_schema.json /data/books_schema.json
 
 COPY books_schema_syn.json /data/books_schema_syn.json
 
+COPY books_schema_nlp.json /data/books_schema_nlp.json
+
 COPY synonyms.txt /data/synonyms.txt
 
-COPY startup_nlp.sh /scripts/startup_nlp.sh
+COPY startup.sh /scripts/startup.sh
 
-ENTRYPOINT ["/scripts/startup_nlp.sh"]
+ENTRYPOINT ["/scripts/startup.sh"]

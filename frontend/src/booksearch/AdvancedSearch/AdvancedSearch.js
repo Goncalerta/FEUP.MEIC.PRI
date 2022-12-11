@@ -1,7 +1,7 @@
 import Paper from "@mui/material/Paper";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import Collapse from "@mui/material/Collapse";
-import SearchBar from "layouts/sections/booksearch/SearchBar/SearchBar";
+import SearchBar from "booksearch/SearchBar/SearchBar";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { useState } from "react";
@@ -12,8 +12,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import Button from "@mui/material/Button";
 import api from "api";
+import PropTypes from "prop-types";
 
-function AdvancedSearch() {
+function AdvancedSearch(props) {
     const [open, setOpen] = useState(false);
 
     const handleAdvancedClick = () => {
@@ -46,15 +47,16 @@ function AdvancedSearch() {
         setAuthorAliveEndDate(newValue);
     };
 
-    const onSearch = (value) => {
+    const onSearch = async (value) => {
+        props.onStartSearch();
         api.get("search", {
             text: value,
         })
             .then((response) => {
-                console.log(response);
+                props.onSearch(response.data);
             })
-            .catch((error) => {
-                console.log(error);
+            .catch(() => {
+                props.onError();
             });
     };
 
@@ -70,6 +72,7 @@ function AdvancedSearch() {
                 width: "80%",
                 flexDirection: "column",
                 background: "transparent",
+                boxShadow: "none",
             }}
         >
             <SearchBar onSearch={onSearch} />
@@ -83,6 +86,7 @@ function AdvancedSearch() {
                     alignItems: "center",
                     userSelect: "none",
                     color: "white",
+                    cursor: "pointer",
                 }}
             >
                 Advanced {open ? <ExpandLess /> : <ExpandMore />}
@@ -93,7 +97,7 @@ function AdvancedSearch() {
                     <Box
                         style={{
                             flexGrow: 1,
-                            background: "#FFFFFF40",
+                            background: "#00000090",
                             borderRadius: "1em",
                             padding: "1em 0.75em",
                             input: { color: "red" },
@@ -149,6 +153,7 @@ function AdvancedSearch() {
                                 />
                             </Grid>
                             <Grid item xs={4}>
+                                {/* TODO size is wrong */}
                                 <Autocomplete
                                     disablePortal
                                     id="category"
@@ -286,5 +291,11 @@ function AdvancedSearch() {
         </Paper>
     );
 }
+
+AdvancedSearch.propTypes = {
+    onSearch: PropTypes.func.isRequired,
+    onError: PropTypes.func.isRequired,
+    onStartSearch: PropTypes.func.isRequired,
+};
 
 export default AdvancedSearch;

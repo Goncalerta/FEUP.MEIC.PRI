@@ -22,8 +22,6 @@ services:
         ports:
             - ${DJANGO_PORT}:8000
         environment:
-            - SOLR_HOST=${SOLR_IP}
-            - SOLR_PORT=${SOLR_PORT}
             - DJANGO_SERVER_IP=${DJANGO_IP}
 
     react:
@@ -36,6 +34,3 @@ services:
             - ${REACT_PORT}:3000
         volumes:
             - ./frontend/src:/app/frontend/src
-        environment:
-            - REACT_APP_BACKEND_HOST=${DJANGO_IP}
-            - REACT_APP_BACKEND_PORT=${DJANGO_PORT}

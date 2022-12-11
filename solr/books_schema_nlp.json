@@ -3,6 +3,30 @@
         {
             "name": "GeneralTextField",
             "class": "solr.TextField",
+            "indexAnalyzer": {
+                "tokenizer": {
+                    "class": "solr.StandardTokenizerFactory"
+                },
+                "filters": [
+                    {
+                        "class": "solr.ASCIIFoldingFilterFactory",
+                        "preserveOriginal": "true"
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    },
+                    {
+                        "class": "solr.EnglishPossessiveFilterFactory"
+                    },
+                    {
+                        "class": "solr.EnglishMinimalStemFilterFactory"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "NLPText",
+            "class": "solr.TextField",
             "analyzer": {
                 "tokenizer": {
                     "class": "solr.OpenNLPTokenizerFactory",
@@ -20,19 +44,6 @@
                     },
                     {
                         "class": "solr.TypeAsPayloadFilterFactory"
-                    },
-                    {
-                        "class": "solr.ASCIIFoldingFilterFactory",
-                        "preserveOriginal": true
-                    },
-                    {
-                        "class": "solr.LowerCaseFilterFactory"
-                    },
-                    {
-                        "class": "solr.EnglishPossessiveFilterFactory"
-                    },
-                    {
-                        "class": "solr.EnglishMinimalStemFilterFactory"
                     }
                 ]
             }
@@ -40,49 +51,26 @@
         {
             "name": "DateRangeFieldType",
             "class": "solr.DateRangeField"
+        },
+        {
+            "name": "ContentType",
+            "class": "solr.EnumFieldType",
+            "docValues": true,
+            "enumsConfig": "enumsConfig.xml",
+            "enumName": "content_type"
         }
     ],
     "add-field": [
         {
+            "name": "content_type",
+            "type": "ContentType",
+            "indexed": true,
+            "required": true
+        },
+        {
             "name": "title",
             "type": "GeneralTextField",
             "indexed": true
-        },
-        {
-            "name": "authors.author_id",
-            "type": "pint",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "authors.last_name",
-            "type": "string",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "authors.first_name",
-            "type": "string",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "authors.author_title",
-            "type": "GeneralTextField",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "authors.year_of_birth",
-            "type": "DateRangeFieldType",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "authors.year_of_death",
-            "type": "DateRangeFieldType",
-            "indexed": true,
-            "multiValued": true
         },
         {
             "name": "release_date",
@@ -90,51 +78,10 @@
             "indexed": true
         },
         {
-            "name": "reviews.date",
-            "type": "pdate",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "reviews.rating",
-            "type": "pfloat",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "reviews.user_name",
-            "type": "string",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "reviews.text",
+            "name": "subjects",
             "type": "GeneralTextField",
             "indexed": true,
             "multiValued": true
-        },
-        {
-            "name": "reviews.num_likes",
-            "type": "plong",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "subjects.id",
-            "type": "pint",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "subjects.name",
-            "type": "GeneralTextField",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "text",
-            "type": "GeneralTextField",
-            "indexed": true
         },
         {
             "name": "rating",
@@ -144,30 +91,78 @@
         {
             "name": "num_ratings",
             "type": "plong",
-            "indexed": true
+            "indexed": false
         },
         {
             "name": "num_reviews",
             "type": "plong",
+            "indexed": false
+        },
+        {
+            "name": "text",
+            "type": "NLPText",
             "indexed": true
         },
         {
-            "name": "person_book",
+            "name": "last_name",
+            "type": "string",
+            "indexed": true
+        },
+        {
+            "name": "first_name",
+            "type": "string",
+            "indexed": true
+        },
+        {
+            "name": "author_title",
             "type": "GeneralTextField",
+            "indexed": false
+        },
+        {
+            "name": "year_of_birth",
+            "type": "DateRangeFieldType",
+            "indexed": true
+        },
+        {
+            "name": "year_of_death",
+            "type": "DateRangeFieldType",
+            "indexed": true
+        },
+        {
+            "name": "date",
+            "type": "pdate",
+            "indexed": false
+        },
+        {
+            "name": "user_name",
+            "type": "string",
+            "indexed": false
+        },
+        {
+            "name": "num_likes",
+            "type": "plong",
+            "indexed": false
+        },
+        {
+            "name": "person_book",
+            "type": "string",
             "indexed": true,
-            "multiValued": true
+            "multiValued": true,
+            "stored": true
         },
         {
             "name": "location_book",
-            "type": "GeneralTextField",
+            "type": "string",
             "indexed": true,
-            "multiValued": true
+            "multiValued": true,
+            "stored": true
         },
         {
             "name": "date_book",
-            "type": "GeneralTextField",
+            "type": "string",
             "indexed": true,
-            "multiValued": true
+            "multiValued": true,
+            "stored": true
         }
     ]
 }

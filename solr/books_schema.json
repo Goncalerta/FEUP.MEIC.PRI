@@ -3,47 +3,31 @@
         {
             "name": "GeneralTextField",
             "class": "solr.TextField",
-            "analyzer": {
+            "indexAnalyzer": {
                 "tokenizer": {
                     "class": "solr.StandardTokenizerFactory"
                 },
                 "filters": [
                     {
                         "class": "solr.ASCIIFoldingFilterFactory",
-                        "preserveOriginal": "true"
+                        "preserveOriginal": true
                     },
                     {
                         "class": "solr.LowerCaseFilterFactory"
-                    },
-                    {
-                        "class": "solr.EnglishPossessiveFilterFactory"
-                    },
-                    {
-                        "class": "solr.EnglishMinimalStemFilterFactory"
                     }
                 ]
-            }
-        },
-        {
-            "name": "NLPText",
-            "class": "solr.TextField",
-            "analyzer": {
+            },
+            "queryAnalyzer": {
                 "tokenizer": {
-                    "class": "solr.OpenNLPTokenizerFactory",
-                    "sentenceModel": "en-sent.bin",
-                    "tokenizerModel": "en-token.bin"
+                    "class": "solr.StandardTokenizerFactory"
                 },
                 "filters": [
                     {
-                        "class": "solr.OpenNLPPOSFilterFactory",
-                        "posTaggerModel": "en-pos-maxent.bin"
+                        "class": "solr.ASCIIFoldingFilterFactory",
+                        "preserveOriginal": true
                     },
                     {
-                        "class": "solr.OpenNLPChunkerFilterFactory",
-                        "chunkerModel": "en-chunker.bin"
-                    },
-                    {
-                        "class": "solr.TypeAsPayloadFilterFactory"
+                        "class": "solr.LowerCaseFilterFactory"
                     }
                 ]
             }
@@ -142,27 +126,6 @@
             "name": "num_likes",
             "type": "plong",
             "indexed": false
-        },
-        {
-            "name": "person_book",
-            "type": "string",
-            "indexed": true,
-            "multiValued": true,
-            "stored": true
-        },
-        {
-            "name": "location_book",
-            "type": "string",
-            "indexed": true,
-            "multiValued": true,
-            "stored": true
-        },
-        {
-            "name": "date_book",
-            "type": "string",
-            "indexed": true,
-            "multiValued": true,
-            "stored": true
         }
     ]
 }
