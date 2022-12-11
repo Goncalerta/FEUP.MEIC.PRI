@@ -23,7 +23,7 @@ import MKBox from "components/MKBox";
 // Material Kit 2 React examples
 import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import DefaultFooter from "examples/Footers/DefaultFooter";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AdvancedSearch from "booksearch/AdvancedSearch/AdvancedSearch";
 
 // Routes
@@ -36,26 +36,50 @@ import SearchResults from "booksearch/SearchResults/SearchResults";
 
 function Presentation() {
     const [searchResults, setSearchResults] = useState({
+        first_load: true,
         loading: true,
         data: [],
         error: false,
     });
 
+    const resultsRef = useRef(null);
+
     const onSearch = (data) => {
-        setSearchResults(data);
+        setSearchResults({ first_load: false, loading: false, data, error: false });
+        resultsRef.current.scrollIntoView();
+    };
+
+    const onError = () => {
+        setSearchResults({ first_load: false, loading: false, data: [], error: true });
+    };
+
+    const onStartSearch = () => {
+        setSearchResults({ first_load: false, loading: true, data: [], error: false });
     };
 
     const browse = async () => {
-        const response = await api.get("browse", { page: 0 });
-        if (searchResults.loading) {
-            if (response.status === 200) {
-                setSearchResults({ loading: false, data: response.data, error: false });
-            } else {
-                setSearchResults({ loading: false, data: [], error: true });
+        try {
+            const response = await api.get("browse", { page: 0 });
+            if (searchResults.first_load) {
+                if (response.status === 200) {
+                    setSearchResults({
+                        first_load: false,
+                        loading: false,
+                        data: response.data,
+                        error: false,
+                    });
+                } else {
+                    setSearchResults({ first_load: false, loading: false, data: [], error: true });
+                }
+            }
+        } catch (e) {
+            if (searchResults.first_load) {
+                setSearchResults({ first_load: false, loading: false, data: [], error: true });
             }
         }
     };
-    browse();
+
+    useEffect(() => browse(), []);
 
     return (
         <>
@@ -72,7 +96,11 @@ function Presentation() {
                 }}
             >
                 <Container>
-                    <AdvancedSearch onSearch={onSearch} />
+                    <AdvancedSearch
+                        onSearch={onSearch}
+                        onError={onError}
+                        onStartSearch={onStartSearch}
+                    />
                 </Container>
             </MKBox>
             <Card
@@ -87,6 +115,7 @@ function Presentation() {
                     boxShadow: ({ boxShadows: { xxl } }) => xxl,
                 }}
             >
+                <div ref={resultsRef} />
                 <SearchResults
                     data={searchResults.data}
                     loading={searchResults.loading}

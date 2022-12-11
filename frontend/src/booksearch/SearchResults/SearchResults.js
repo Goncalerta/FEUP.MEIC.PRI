@@ -1,27 +1,69 @@
-import { Box, Container, Rating, Typography } from "@mui/material";
+import { Box, CircularProgress, Container, Rating, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import StarIcon from "@mui/icons-material/Star";
+import dayjs from "dayjs";
 
 function SearchResults(props) {
     const { loading, error, data } = props;
 
-    const ERROR_MESSAGE = "An error occurred :(";
+    const ERROR_MESSAGE = "An error occurred  while fetching results :(";
     const NO_RESULTS_MESSAGE = "No results found.";
 
+    const authorsToText = (authors) => {
+        const authorsList = authors.map((author) => {
+            /* eslint-disable camelcase */
+            let { first_name, last_name, year_of_birth, year_of_death } = author;
+            if (!year_of_birth) {
+                year_of_birth = "";
+            }
+            if (!year_of_death) {
+                year_of_death = "";
+            }
+            if (!first_name) {
+                first_name = "";
+            }
+            if (!last_name) {
+                last_name = "";
+            }
+
+            let year = "?";
+            if (year_of_birth !== "" || year_of_death !== "") {
+                year = `${year_of_birth}-${year_of_death}`;
+            }
+
+            let name = "Unknown";
+            if (first_name !== "" || last_name !== "") {
+                name = `${first_name} ${last_name}`;
+            }
+
+            return `${name} (${year})`;
+        });
+
+        const lastAuthor = authorsList.pop();
+        if (authorsList.length === 0) {
+            return lastAuthor;
+        }
+
+        const firstAuthors = authorsList.join(", ");
+
+        return `${firstAuthors} and ${lastAuthor}`;
+    };
+
+    const subjectsToText = (subjects) => subjects.join(", ");
+
     const renderResult = (book) => (
-        <Container key={book.id} sx={{ marginTop: "3em" }}>
+        <Container key={book.id}>
             <Typography sx={{ fontSize: 34, margin: "0" }} color="text.secondary" gutterBottom>
-                <a href="/book/0">The adventures of this name has to change</a>
+                <a href={`/book/${book.id}`}>{book.title}</a>
             </Typography>
             <Typography sx={{ fontSize: 18, margin: "0" }} color="text.secondary" gutterBottom>
-                Authored by Pedro Gonçalo (2001-), Nuno Costa (2001-) and William Deadspear
-                (1200-1210)
+                Authored by {authorsToText(book.authors)}
             </Typography>
             <Typography sx={{ fontSize: 12, margin: "0" }} color="text.secondary" gutterBottom>
-                Home Economics, Science, History, Geography, Art, Music, Drama, Physical, Erotic
+                {subjectsToText(book.subjects)}
             </Typography>
             <Typography sx={{ fontSize: 12, margin: "0" }} color="text.secondary" gutterBottom>
-                Released on 17/04/2023
+                Released on {dayjs(book.release_date).format("DD MMM YYYY")}
             </Typography>
             <Box
                 sx={{
@@ -31,7 +73,7 @@ function SearchResults(props) {
                 }}
             >
                 <Rating
-                    value={4}
+                    value={book.rating}
                     readOnly
                     precision={0.5}
                     emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
@@ -41,20 +83,54 @@ function SearchResults(props) {
                     color="text.secondary"
                     gutterBottom
                 >
-                    • 13 ratings
+                    • {book.num_ratings} ratings
                 </Typography>
             </Box>
         </Container>
     );
 
     return (
-        <Container>
+        <Container sx={{ marginBottom: "3em", marginTop: "3em" }}>
             {/* <Typography sx={{ fontSize: 34 }} color="text.secondary" gutterBottom>
                 Results
             </Typography> */}
-            {loading && <p>Loading...</p>}
-            {error && <p>{ERROR_MESSAGE}</p>}
-            {!loading && !error && data.length === 0 && <p>{NO_RESULTS_MESSAGE}</p>}
+            {loading && (
+                <Box sx={{ display: "flex" }}>
+                    <CircularProgress sx={{ marginLeft: "auto", marginRight: "auto" }} />
+                </Box>
+            )}
+            {error && (
+                <Box sx={{ display: "flex" }}>
+                    <Typography
+                        sx={{
+                            fontSize: 32,
+                            lineHeight: "0.1em",
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                        }}
+                        color="text.secondary"
+                        gutterBottom
+                    >
+                        {ERROR_MESSAGE}
+                    </Typography>
+                </Box>
+            )}
+            {!loading && !error && data.length === 0 && (
+                <Box sx={{ display: "flex" }}>
+                    <Typography
+                        sx={{
+                            fontSize: 32,
+                            lineHeight: "0.1em",
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                        }}
+                        color="text.secondary"
+                        gutterBottom
+                    >
+                        {NO_RESULTS_MESSAGE}
+                    </Typography>
+                </Box>
+            )}
             {!loading && !error && data.map((book) => renderResult(book))}
         </Container>
     );

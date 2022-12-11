@@ -47,19 +47,16 @@ function AdvancedSearch(props) {
         setAuthorAliveEndDate(newValue);
     };
 
-    const onSearch = (value) => {
+    const onSearch = async (value) => {
+        props.onStartSearch();
         api.get("search", {
             text: value,
         })
             .then((response) => {
-                // eslint-disable-next-line no-console
-                console.log(response);
-
                 props.onSearch(response.data);
             })
-            .catch((error) => {
-                // eslint-disable-next-line no-console
-                console.log(error);
+            .catch(() => {
+                props.onError();
             });
     };
 
@@ -156,6 +153,7 @@ function AdvancedSearch(props) {
                                 />
                             </Grid>
                             <Grid item xs={4}>
+                                {/* TODO size is wrong */}
                                 <Autocomplete
                                     disablePortal
                                     id="category"
@@ -165,7 +163,6 @@ function AdvancedSearch(props) {
                                             {...params}
                                             label="Category"
                                             sx={{
-                                                height: "0.8em",
                                                 input: { color: "#FFFFFF" },
                                                 label: { color: "#FFFFFF" },
                                                 svg: { color: "#FFFFFF" },
@@ -180,7 +177,6 @@ function AdvancedSearch(props) {
                                     label="Min rating"
                                     variant="outlined"
                                     sx={{
-                                        height: "1.5em",
                                         width: "100%",
                                         input: { color: "#FFFFFF" },
                                         label: { color: "#FFFFFF" },
@@ -298,6 +294,8 @@ function AdvancedSearch(props) {
 
 AdvancedSearch.propTypes = {
     onSearch: PropTypes.func.isRequired,
+    onError: PropTypes.func.isRequired,
+    onStartSearch: PropTypes.func.isRequired,
 };
 
 export default AdvancedSearch;
