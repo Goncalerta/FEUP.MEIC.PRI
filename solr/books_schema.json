@@ -1,38 +1,33 @@
 {
-     "add-field-type": [
+    "add-field-type": [
         {
             "name": "GeneralTextField",
             "class": "solr.TextField",
-            "analyzer": {
+            "indexAnalyzer": {
                 "tokenizer": {
-                    "class": "solr.OpenNLPTokenizerFactory",
-                    "sentenceModel": "en-sent.bin",
-                    "tokenizerModel": "en-token.bin"
+                    "class": "solr.StandardTokenizerFactory"
                 },
                 "filters": [
-                    {
-                        "class": "solr.OpenNLPPOSFilterFactory",
-                        "posTaggerModel": "en-pos-maxent.bin"
-                    },
-                    {
-                        "class": "solr.OpenNLPChunkerFilterFactory",
-                        "chunkerModel": "en-chunker.bin"
-                    },
-                    {
-                        "class": "solr.TypeAsPayloadFilterFactory"
-                    },
                     {
                         "class": "solr.ASCIIFoldingFilterFactory",
                         "preserveOriginal": true
                     },
                     {
                         "class": "solr.LowerCaseFilterFactory"
+                    }
+                ]
+            },
+            "queryAnalyzer": {
+                "tokenizer": {
+                    "class": "solr.StandardTokenizerFactory"
+                },
+                "filters": [
+                    {
+                        "class": "solr.ASCIIFoldingFilterFactory",
+                        "preserveOriginal": true
                     },
                     {
-                        "class": "solr.EnglishPossessiveFilterFactory"
-                    },
-                    {
-                        "class": "solr.EnglishMinimalStemFilterFactory"
+                        "class": "solr.LowerCaseFilterFactory"
                     }
                 ]
             }
@@ -131,24 +126,6 @@
             "name": "num_likes",
             "type": "plong",
             "indexed": false
-        },
-        {
-            "name": "person_book",
-            "type": "GeneralTextField",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "location_book",
-            "type": "GeneralTextField",
-            "indexed": true,
-            "multiValued": true
-        },
-        {
-            "name": "date_book",
-            "type": "GeneralTextField",
-            "indexed": true,
-            "multiValued": true
         }
     ]
 }

@@ -8,8 +8,4 @@ COPY ./package.json /app/frontend/package.json
 COPY ./.eslintrc.json /app/frontend/.eslintrc.json
 COPY ./.prettierrc.json /app/frontend/.prettierrc.json
 COPY ./jsconfig.json /app/frontend/jsconfig.json
-ARG REACT_APP_BACKEND_HOST
-ENV REACT_APP_BACKEND_HOST=$REACT_APP_BACKEND_HOST
-ARG REACT_APP_BACKEND_PORT
-ENV REACT_APP_BACKEND_PORT=$REACT_APP_BACKEND_PORT
 RUN npm ci

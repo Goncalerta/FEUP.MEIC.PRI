@@ -7,11 +7,12 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 // Material Kit 2 React components
 import MKTypography from "components/MKTypography";
 
-// Images
+// // Images
 import logoCT from "assets/images/logo-ct-dark.png";
 
 const date = new Date().getFullYear();
 
+// TODO footer routes
 export default {
     brand: {
         name: "Booksearch",
