@@ -119,7 +119,7 @@ function AdvancedSearch(props) {
                             <Grid item xs={3}>
                                 <DesktopDatePicker
                                     label="Released after"
-                                    inputFormat="DD/MM/YYYY" // TODO format should depend on locale
+                                    inputFormat="DD/MM/YYYY"
                                     value={fromReleaseDate}
                                     onChange={handleFromReleaseDate}
                                     renderInput={(params) => (
@@ -137,7 +137,7 @@ function AdvancedSearch(props) {
                             <Grid item xs={3}>
                                 <DesktopDatePicker
                                     label="Released before"
-                                    inputFormat="DD/MM/YYYY" // TODO format should depend on locale
+                                    inputFormat="DD/MM/YYYY"
                                     value={toReleaseDate}
                                     onChange={handleToReleaseDate}
                                     renderInput={(params) => (
@@ -248,7 +248,7 @@ function AdvancedSearch(props) {
                             <Grid item xs={3}>
                                 <DesktopDatePicker
                                     label="Alive after"
-                                    inputFormat="DD/MM/YYYY" // TODO format should depend on locale
+                                    inputFormat="DD/MM/YYYY"
                                     value={authorAliveBeginDate}
                                     onChange={handleAuthorAliveBeginDate}
                                     renderInput={(params) => (
@@ -266,7 +266,7 @@ function AdvancedSearch(props) {
                             <Grid item xs={3}>
                                 <DesktopDatePicker
                                     label="Alive before"
-                                    inputFormat="DD/MM/YYYY" // TODO format should depend on locale
+                                    inputFormat="DD/MM/YYYY"
                                     value={authorAliveEndDate}
                                     onChange={handleAuthorAliveEndDate}
                                     renderInput={(params) => (

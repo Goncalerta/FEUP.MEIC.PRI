@@ -98,7 +98,7 @@ def fetch_book_txt(book_id):
         print(f"👍 Book {book_id} has UTF-8 txt encoded file.")
 
     # The next part tries to filter out the header and footer of the file that is not the book
-    # That is hard because some books contain mistakes in the delimiter, so TODO check if this is working for all books
+    # That is hard because some books contain mistakes in the delimiter, so TO-DO check if this is working for all books
     text = r.text
     text = re.split(r'\*\*\*\s?START[^*]*\*\*\*\s', text, maxsplit=1)
     if len(text) != 2:
@@ -126,7 +126,7 @@ def parse_book_info_table(data, fetched_books):
     # HACK to allow books without authors
     if 'Author' not in data:
         if 'Translator' in data:
-            # TODO should we do this? We could also just skip these books, or leave the list of authors as empty they don't have an author
+            # TO-DO should we do this? We could also just skip these books, or leave the list of authors as empty they don't have an author
             #      we already allow books with no author if they don't have a translator
             print(
                 f"❌ No author found for book {book_id}. Implicitely replacing with 'Translator' {data['Translator']}...")

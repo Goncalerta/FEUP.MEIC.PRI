@@ -1,0 +1,286 @@
+// @mui material components
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+
+// Material Kit 2 React components
+import MKBox from "components/MKBox";
+import MKTypography from "components/MKTypography";
+import MKButton from "components/MKButton";
+
+// Material Kit 2 React examples
+import DefaultNavbar from "examples/Navbars/DefaultNavbar";
+import DefaultFooter from "examples/Footers/DefaultFooter";
+
+// Routes
+import routes from "routes";
+import footerRoutes from "footer.routes";
+
+// Images
+import bgImage from "assets/images/bg-book.jpg";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import api from "api";
+import { CircularProgress, Rating, Typography, Box } from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
+import dayjs from "dayjs";
+
+function Book() {
+    const { id } = useParams();
+    const [fetchResults, setFetchResults] = useState({
+        loading: true,
+        data: {},
+        error: false,
+    });
+
+    const ERROR_MESSAGE = "An error occurred  while fetching book :(";
+
+    const fetchBook = async () => {
+        try {
+            const response = await api.get("book", { id });
+            if (response.status === 200) {
+                setFetchResults({
+                    loading: false,
+                    data: response.data,
+                    error: false,
+                });
+            } else {
+                setFetchResults({ loading: false, data: {}, error: true });
+            }
+        } catch (e) {
+            if (fetchResults.first_load) {
+                setFetchResults({ loading: false, data: {}, error: true });
+            }
+        }
+    };
+
+    useEffect(() => fetchBook(), []);
+
+    const authorsToText = (authors) => {
+        const authorsList = authors.map((author) => {
+            /* eslint-disable camelcase */
+            let { first_name, last_name, year_of_birth, year_of_death } = author;
+            if (!year_of_birth) {
+                year_of_birth = "";
+            }
+            if (!year_of_death) {
+                year_of_death = "";
+            }
+            if (!first_name) {
+                first_name = "";
+            }
+            if (!last_name) {
+                last_name = "";
+            }
+
+            let year = "?";
+            if (year_of_birth !== "" || year_of_death !== "") {
+                year = `${year_of_birth}-${year_of_death}`;
+            }
+
+            let name = "Unknown";
+            if (first_name !== "" || last_name !== "") {
+                name = `${first_name} ${last_name}`;
+            }
+
+            return `${name} (${year})`;
+        });
+
+        const lastAuthor = authorsList.pop();
+        if (authorsList.length === 0) {
+            return lastAuthor;
+        }
+
+        const firstAuthors = authorsList.join(", ");
+
+        return `${firstAuthors} and ${lastAuthor}`;
+    };
+
+    const subjectsToText = (subjects) => subjects.join(", ");
+
+    const bookInfo = (book) => (
+        <>
+            <MKTypography
+                variant="h1"
+                color="white"
+                sx={({ breakpoints, typography: { size } }) => ({
+                    [breakpoints.down("md")]: {
+                        fontSize: size["3xl"],
+                    },
+                })}
+            >
+                {book.title}
+            </MKTypography>
+            <MKTypography variant="body1" color="white" opacity={0.8} mt={1} mb={1}>
+                Authored by {authorsToText(book.authors)}
+            </MKTypography>
+            <MKTypography variant="body1" color="white" opacity={0.8} mt={1} mb={3}>
+                {subjectsToText(book.subjects)}
+            </MKTypography>
+            <Box
+                sx={{
+                    width: 200,
+                    display: "flex",
+                    alignItems: "center",
+                }}
+            >
+                <Rating
+                    value={book.rating}
+                    readOnly
+                    precision={0.5}
+                    emptyIcon={
+                        <StarIcon style={{ color: "white", opacity: 0.3 }} fontSize="inherit" />
+                    }
+                />
+                <MKTypography
+                    variant="body1"
+                    color="white"
+                    opacity={0.8}
+                    sx={{ fontSize: 14, margin: "0", marginLeft: "0.2em", lineHeight: "0.1em" }}
+                >
+                    • {book.num_ratings} ratings
+                </MKTypography>
+            </Box>
+            <MKTypography variant="body1" color="white" opacity={0.8} mt={1} mb={3}>
+                Released on {dayjs(book.release_date).format("DD MMM YYYY")}
+            </MKTypography>
+        </>
+    );
+
+    const reviewsInfo = (book) => (
+        <>
+            <MKTypography
+                variant="h1"
+                color="white"
+                sx={({ breakpoints, typography: { size } }) => ({
+                    [breakpoints.down("md")]: {
+                        fontSize: size["3xl"],
+                    },
+                })}
+            >
+                {book.title}
+            </MKTypography>
+            <MKButton color="default" sx={{ color: ({ palette: { dark } }) => dark.main }}>
+                create account
+            </MKButton>
+            <MKTypography variant="h6" color="white" mt={8} mb={1}>
+                Find us on
+            </MKTypography>
+        </>
+    );
+
+    const textInfo = (book) => (
+        <>
+            <p>{book.title}</p>
+        </>
+        // split book.text into paragraphs
+
+        // book.text.split.map((paragraph) => ());
+
+        // <>
+        //     {book.text.split.map((paragraph) => (
+
+        //     )}
+        //     <MKTypography
+        //         variant="p"
+        //         sx={({ breakpoints, typography: { size } }) => ({
+        //             [breakpoints.down("md")]: {
+        //                 fontSize: size["3xl"],
+        //             },
+        //         })}
+        //     >
+        //         {`text\n\nlol`.replace(/\n/g, "<br />")}
+        //     </MKTypography>
+        // </>
+    );
+
+    return (
+        <>
+            <DefaultNavbar routes={routes} />
+            <MKBox
+                minHeight="75vh"
+                width="100%"
+                sx={{
+                    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.75)), url(${bgImage})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    display: "grid",
+                    placeItems: "center",
+                }}
+            >
+                <Grid
+                    container
+                    item
+                    xs={12}
+                    lg={8}
+                    justifyContent="center"
+                    alignItems="center"
+                    flexDirection="column"
+                    sx={{ mx: "auto", textAlign: "center" }}
+                >
+                    {fetchResults.loading && (
+                        <Box sx={{ display: "flex" }}>
+                            <CircularProgress sx={{ marginLeft: "auto", marginRight: "auto" }} />
+                        </Box>
+                    )}
+                    {fetchResults.error && (
+                        <Box sx={{ display: "flex" }}>
+                            <MKTypography
+                                variant="h1"
+                                color="white"
+                                sx={({ breakpoints, typography: { size } }) => ({
+                                    [breakpoints.down("md")]: {
+                                        fontSize: size["3xl"],
+                                    },
+                                })}
+                            >
+                                {ERROR_MESSAGE}
+                            </MKTypography>
+                        </Box>
+                    )}
+                    {!fetchResults.loading && !fetchResults.error && bookInfo(fetchResults.data)}
+                </Grid>
+            </MKBox>
+            <Card
+                sx={{
+                    p: 2,
+                    mx: { xs: 2, lg: 3 },
+                    mt: -8,
+                    mb: 4,
+                    boxShadow: ({ boxShadows: { xxl } }) => xxl,
+                }}
+            >
+                <Container sx={{ marginBottom: "3em", marginTop: "3em" }}>
+                    {fetchResults.loading && (
+                        <Box sx={{ display: "flex" }}>
+                            <CircularProgress sx={{ marginLeft: "auto", marginRight: "auto" }} />
+                        </Box>
+                    )}
+                    {fetchResults.error && (
+                        <Box sx={{ display: "flex" }}>
+                            <Typography
+                                sx={{
+                                    fontSize: 32,
+                                    lineHeight: "0.1em",
+                                    marginLeft: "auto",
+                                    marginRight: "auto",
+                                }}
+                                color="text.secondary"
+                                gutterBottom
+                            >
+                                {ERROR_MESSAGE}
+                            </Typography>
+                        </Box>
+                    )}
+                    {!fetchResults.loading && !fetchResults.error && reviewsInfo(fetchResults.data)}
+                    {!fetchResults.loading && !fetchResults.error && textInfo(fetchResults.data)}
+                </Container>
+            </Card>
+            <MKBox pt={6} px={1} mt={6}>
+                <DefaultFooter content={footerRoutes} />
+            </MKBox>
+        </>
+    );
+}
+
+export default Book;
