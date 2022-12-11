@@ -1,7 +1,31 @@
 {
-     "add-field-type": [
+    "add-field-type": [
         {
             "name": "GeneralTextField",
+            "class": "solr.TextField",
+            "analyzer": {
+                "tokenizer": {
+                    "class": "solr.StandardTokenizerFactory"
+                },
+                "filters": [
+                    {
+                        "class": "solr.ASCIIFoldingFilterFactory",
+                        "preserveOriginal": "true"
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    },
+                    {
+                        "class": "solr.EnglishPossessiveFilterFactory"
+                    },
+                    {
+                        "class": "solr.EnglishMinimalStemFilterFactory"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "NLPText",
             "class": "solr.TextField",
             "analyzer": {
                 "tokenizer": {
@@ -20,19 +44,6 @@
                     },
                     {
                         "class": "solr.TypeAsPayloadFilterFactory"
-                    },
-                    {
-                        "class": "solr.ASCIIFoldingFilterFactory",
-                        "preserveOriginal": true
-                    },
-                    {
-                        "class": "solr.LowerCaseFilterFactory"
-                    },
-                    {
-                        "class": "solr.EnglishPossessiveFilterFactory"
-                    },
-                    {
-                        "class": "solr.EnglishMinimalStemFilterFactory"
                     }
                 ]
             }
@@ -89,7 +100,7 @@
         },
         {
             "name": "text",
-            "type": "GeneralTextField",
+            "type": "NLPText",
             "indexed": true
         },
         {
@@ -134,21 +145,24 @@
         },
         {
             "name": "person_book",
-            "type": "GeneralTextField",
+            "type": "string",
             "indexed": true,
-            "multiValued": true
+            "multiValued": true,
+            "stored": true
         },
         {
             "name": "location_book",
-            "type": "GeneralTextField",
+            "type": "string",
             "indexed": true,
-            "multiValued": true
+            "multiValued": true,
+            "stored": true
         },
         {
             "name": "date_book",
-            "type": "GeneralTextField",
+            "type": "string",
             "indexed": true,
-            "multiValued": true
+            "multiValued": true,
+            "stored": true
         }
     ]
 }
