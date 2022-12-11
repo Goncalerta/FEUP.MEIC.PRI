@@ -166,7 +166,10 @@ function AdvancedSearch(props) {
                                             {...params}
                                             label="Category"
                                             sx={{
-                                                input: { color: "#FFFFFF" },
+                                                input: {
+                                                    height: "0.8em",
+                                                    color: "#FFFFFF",
+                                                },
                                                 label: { color: "#FFFFFF" },
                                                 svg: { color: "#FFFFFF" },
                                             }}
@@ -181,7 +184,7 @@ function AdvancedSearch(props) {
                                     variant="outlined"
                                     sx={{
                                         width: "100%",
-                                        input: { color: "#FFFFFF" },
+                                        input: { height: "1.5em", color: "#FFFFFF" },
                                         label: { color: "#FFFFFF" },
                                     }}
                                     inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
