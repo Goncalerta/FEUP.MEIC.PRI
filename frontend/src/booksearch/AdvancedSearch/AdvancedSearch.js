@@ -165,6 +165,7 @@ function AdvancedSearch(props) {
                                             {...params}
                                             label="Category"
                                             sx={{
+                                                height: "0.8em",
                                                 input: { color: "#FFFFFF" },
                                                 label: { color: "#FFFFFF" },
                                                 svg: { color: "#FFFFFF" },
@@ -179,6 +180,7 @@ function AdvancedSearch(props) {
                                     label="Min rating"
                                     variant="outlined"
                                     sx={{
+                                        height: "1.5em",
                                         width: "100%",
                                         input: { color: "#FFFFFF" },
                                         label: { color: "#FFFFFF" },
