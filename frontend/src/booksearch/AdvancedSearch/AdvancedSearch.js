@@ -47,15 +47,18 @@ function AdvancedSearch(props) {
         setAuthorAliveEndDate(newValue);
     };
 
-    const onSearch = async (value) => {
+    const onSearch = async (text) => {
         props.onStartSearch();
-        api.get("search", {
-            text: value,
+        api.get("search/", {
+            params: {
+                value: text,
+            },
         })
             .then((response) => {
                 props.onSearch(response.data);
             })
-            .catch(() => {
+            .catch((e) => {
+                console.log("Error", e);
                 props.onError();
             });
     };

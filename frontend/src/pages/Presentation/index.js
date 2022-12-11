@@ -59,7 +59,7 @@ function Presentation() {
 
     const browse = async () => {
         try {
-            const response = await api.get("browse", { page: 0 });
+            const response = await api.get("browse/", { page: 0 });
             if (searchResults.first_load) {
                 if (response.status === 200) {
                     setSearchResults({

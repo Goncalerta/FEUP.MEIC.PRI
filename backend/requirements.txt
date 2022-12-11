@@ -4,3 +4,4 @@ djangorestframework>=3.14.0
 django-cors-headers>=3.13.0
 requests>=2.27.1
 whitenoise>=6.2.0
+textblob>=0.17.1

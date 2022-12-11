@@ -10,7 +10,11 @@ function SearchResults(props) {
     const NO_RESULTS_MESSAGE = "No results found.";
 
     const authorsToText = (authors) => {
-        const authorsList = authors.map((author) => {
+        let val = authors || [];
+        if (typeof authors === "object") {
+            val = [authors];
+        }
+        const authorsList = val.map((author) => {
             /* eslint-disable camelcase */
             let { first_name, last_name, year_of_birth, year_of_death } = author;
             if (!year_of_birth) {
@@ -67,7 +71,7 @@ function SearchResults(props) {
             </Typography>
             <Box
                 sx={{
-                    width: 200,
+                    width: 300,
                     display: "flex",
                     alignItems: "center",
                 }}
@@ -131,7 +135,7 @@ function SearchResults(props) {
                     </Typography>
                 </Box>
             )}
-            {!loading && !error && data.map((book) => renderResult(book))}
+            {!loading && !error && data.docs.map((book) => renderResult(book))}
         </Container>
     );
 }
@@ -139,7 +143,7 @@ function SearchResults(props) {
 SearchResults.propTypes = {
     loading: PropTypes.bool.isRequired,
     error: PropTypes.bool.isRequired,
-    data: PropTypes.array.isRequired /* eslint-disable-line react/forbid-prop-types */,
+    data: PropTypes.object.isRequired /* eslint-disable-line react/forbid-prop-types */,
 };
 
 export default SearchResults;

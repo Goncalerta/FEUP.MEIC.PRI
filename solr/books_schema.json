@@ -84,7 +84,7 @@
         },
         {
             "name": "text",
-            "type": "NLPText",
+            "type": "GeneralTextField",
             "indexed": true
         },
         {

@@ -2,7 +2,7 @@
 
 from rest_framework import viewsets
 from rest_framework.response import Response
-from src.booksearch.solr_api import make_query
+from src.booksearch.solr_api import make_query_basic
 
 
 class ExampleViewSet(viewsets.ViewSet):
@@ -27,20 +27,15 @@ class BookViewSet(viewsets.ViewSet):
     """
 
     def list(self, request):
-        data = request.data
-        value = data.get("value", "*")
-        # import requests
-        # from requests.adapters import HTTPAdapter, Retry
-        # s = requests.Session()
+        data = request.query_params
+        value = data.get("value", "*:*")
+        return Response(make_query_basic(q=value, rows=10, start=0))
 
-        # retries = Retry(total=5,
-        #         backoff_factor=0.1,
-        #         status_forcelist=[ 500, 502, 503, 504 ])
-        # s.mount('http://', HTTPAdapter(max_retries=retries))
-        # print(s.get(f"http://127.0.0.1:8983"))
-        # return Response("lol")
-        # return Response(requests.get(f"http://127.0.0.1:8983").json())
-        return Response(make_query(q=f"*:{value}", rows=10, start=0))
 
-    def retrieve(self, request, pk=None):
-        return Response(make_query(q=f"id:{pk}", rows=10, start=0))
+class BrowseViewSet(viewsets.ViewSet):
+    """
+    Viewset for general book browsing.
+    """
+
+    def list(self, request):
+        return Response(make_query_basic(rows=10, start=0))
