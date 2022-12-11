@@ -4,24 +4,46 @@ import Collapse from "@mui/material/Collapse";
 import SearchBar from "booksearch/SearchBar/SearchBar";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { Autocomplete } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import Button from "@mui/material/Button";
 import api from "api";
 import PropTypes from "prop-types";
+import MKButton from "components/MKButton";
 
 function AdvancedSearch(props) {
     const [open, setOpen] = useState(false);
+
+    const [categories, setCategories] = useState([
+        "Pastoral poetry",
+        "English poetry -- 18th century",
+        "Humorous stories",
+        "England -- Fiction",
+        "Short stories, English -- Periodicals",
+        "English literature -- Periodicals",
+    ]);
 
     const handleAdvancedClick = () => {
         setOpen(!open);
     };
 
-    const categories = ["Home Economics", "Fiction", "Science"]; // TODO fetch this from the backend
+    const fetchCategories = async () => {
+        try {
+            const response = await api.get("categories", {});
+            if (response.status === 200) {
+                setCategories(response.data);
+            } else {
+                console.log("Failed to fetch categories");
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    useEffect(() => fetchCategories(), []);
 
     const [fromReleaseDate, setFromReleaseDate] = useState(null);
 
@@ -153,8 +175,8 @@ function AdvancedSearch(props) {
                                 />
                             </Grid>
                             <Grid item xs={4}>
-                                {/* TODO size is wrong */}
                                 <Autocomplete
+                                    freeSolo
                                     disablePortal
                                     id="category"
                                     options={categories}
@@ -285,9 +307,9 @@ function AdvancedSearch(props) {
                                 />
                             </Grid>
                         </Grid>
-                        <Button variant="contained" sx={{ color: "#FFFFFF", marginTop: "1.5em" }}>
+                        <MKButton variant="contained" sx={{ marginTop: "1.5em" }}>
                             Search
-                        </Button>
+                        </MKButton>
                     </Box>
                 </LocalizationProvider>
             </Collapse>

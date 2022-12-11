@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_HOST = process.env.REACT_APP_BACKEND_HOST || "django";
+const BACKEND_HOST = process.env.REACT_APP_BACKEND_HOST || "localhost"; // TODO django
 const BACKEND_PORT = process.env.REACT_APP_BACKEND_PORT || "8000";
 
 const BACKEND_SERVER = `${BACKEND_HOST}:${BACKEND_PORT}/api/v1.0/`;
@@ -14,7 +14,7 @@ async function apiGet(route, payload = {}) {
     };
 
     return axios.get(
-        `http://${BACKEND_SERVER}${route}`,
+        `http://${BACKEND_SERVER}${route}/`,
         {
             ...payload,
         },

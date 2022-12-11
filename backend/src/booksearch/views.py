@@ -2,7 +2,7 @@
 
 from rest_framework import viewsets
 from rest_framework.response import Response
-from src.booksearch.solr_api import make_query
+from src.booksearch.solr_api import make_query, get_categories
 
 
 class ExampleViewSet(viewsets.ViewSet):
@@ -44,3 +44,11 @@ class BookViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None):
         return Response(make_query(q=f"id:{pk}", rows=10, start=0))
+
+class CategoriesViewSet(viewsets.ViewSet):
+    """
+    Viewset for enumerating categories.
+    """
+
+    def list(self, _request):
+        return Response(get_categories())
