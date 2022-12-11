@@ -6,7 +6,6 @@ import Card from "@mui/material/Card";
 // Material Kit 2 React components
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
-import MKButton from "components/MKButton";
 
 // Material Kit 2 React examples
 import DefaultNavbar from "examples/Navbars/DefaultNavbar";
@@ -21,7 +20,14 @@ import bgImage from "assets/images/bg-book.jpg";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "api";
-import { CircularProgress, Rating, Typography, Box } from "@mui/material";
+import {
+    CircularProgress,
+    Rating,
+    Typography,
+    Box,
+    ToggleButtonGroup,
+    ToggleButton,
+} from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import dayjs from "dayjs";
 
@@ -32,6 +38,14 @@ function Book() {
         data: {},
         error: false,
     });
+
+    const [infoTab, setInfoTab] = useState("transcription");
+
+    const handleInfoTab = (_event, newValue) => {
+        if (newValue !== null) {
+            setInfoTab(newValue);
+        }
+    };
 
     const ERROR_MESSAGE = "An error occurred  while fetching book :(";
 
@@ -48,9 +62,7 @@ function Book() {
                 setFetchResults({ loading: false, data: {}, error: true });
             }
         } catch (e) {
-            if (fetchResults.first_load) {
-                setFetchResults({ loading: false, data: {}, error: true });
-            }
+            setFetchResults({ loading: false, data: {}, error: true });
         }
     };
 
@@ -147,53 +159,79 @@ function Book() {
         </>
     );
 
-    const reviewsInfo = (book) => (
-        <>
-            <MKTypography
-                variant="h1"
-                color="white"
-                sx={({ breakpoints, typography: { size } }) => ({
-                    [breakpoints.down("md")]: {
-                        fontSize: size["3xl"],
-                    },
-                })}
-            >
-                {book.title}
-            </MKTypography>
-            <MKButton color="default" sx={{ color: ({ palette: { dark } }) => dark.main }}>
-                create account
-            </MKButton>
-            <MKTypography variant="h6" color="white" mt={8} mb={1}>
-                Find us on
-            </MKTypography>
-        </>
-    );
+    const reviewsInfo = (book) =>
+        book.reviews.map((review) => (
+            <Container key={review.id} sx={{ marginBottom: "3em", textAlign: "justify" }}>
+                <Typography sx={{ fontSize: 34, margin: "0" }} color="text.secondary" gutterBottom>
+                    <b>
+                        {review.username && review.username !== "" ? review.username : "Anonymous"}
+                    </b>{" "}
+                    on {dayjs(review.date).format("DD MMM YYYY")}
+                </Typography>
+                <Box
+                    sx={{
+                        marginBottom: "0.5em",
+                        width: 200,
+                        display: "flex",
+                        alignItems: "center",
+                    }}
+                >
+                    <Rating
+                        value={review.rating}
+                        readOnly
+                        precision={0.5}
+                        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                    />
+                    <Typography
+                        sx={{ fontSize: 14, margin: "0", marginLeft: "0.2em", lineHeight: "0.1em" }}
+                        color="text.secondary"
+                        gutterBottom
+                    >
+                        • {review.num_likes ? review.num_likes : 0} likes
+                    </Typography>
+                </Box>
+
+                {review.text.split("\n").map((paragraph, index) => (
+                    <div
+                        style={{ marginBottom: "1.5em" }}
+                        key={index /* eslint-disable-line react/no-array-index-key */}
+                    >
+                        <MKTypography
+                            variant="body1"
+                            sx={({ breakpoints, typography: { size } }) => ({
+                                [breakpoints.down("md")]: {
+                                    fontSize: size["3l"],
+                                },
+                            })}
+                        >
+                            {paragraph}
+                        </MKTypography>
+                    </div>
+                ))}
+            </Container>
+        ));
 
     const textInfo = (book) => (
         <>
-            <p>{book.title}</p>
+            {book.text.split("\n").map((paragraph, index) => (
+                <div
+                    style={{ marginBottom: "1.5em", textAlign: "justify" }}
+                    key={index /* eslint-disable-line react/no-array-index-key */}
+                >
+                    <MKTypography
+                        variant="body1"
+                        sx={({ breakpoints, typography: { size } }) => ({
+                            [breakpoints.down("md")]: {
+                                fontSize: size["3l"],
+                            },
+                        })}
+                    >
+                        {paragraph}
+                    </MKTypography>
+                </div>
+            ))}
         </>
-        // split book.text into paragraphs
-
-        // book.text.split.map((paragraph) => ());
-
-        // <>
-        //     {book.text.split.map((paragraph) => (
-
-        //     )}
-        //     <MKTypography
-        //         variant="p"
-        //         sx={({ breakpoints, typography: { size } }) => ({
-        //             [breakpoints.down("md")]: {
-        //                 fontSize: size["3xl"],
-        //             },
-        //         })}
-        //     >
-        //         {`text\n\nlol`.replace(/\n/g, "<br />")}
-        //     </MKTypography>
-        // </>
     );
-
     return (
         <>
             <DefaultNavbar routes={routes} />
@@ -251,29 +289,51 @@ function Book() {
                 }}
             >
                 <Container sx={{ marginBottom: "3em", marginTop: "3em" }}>
-                    {fetchResults.loading && (
-                        <Box sx={{ display: "flex" }}>
-                            <CircularProgress sx={{ marginLeft: "auto", marginRight: "auto" }} />
-                        </Box>
-                    )}
-                    {fetchResults.error && (
-                        <Box sx={{ display: "flex" }}>
-                            <Typography
-                                sx={{
-                                    fontSize: 32,
-                                    lineHeight: "0.1em",
-                                    marginLeft: "auto",
-                                    marginRight: "auto",
-                                }}
-                                color="text.secondary"
-                                gutterBottom
+                    <Container sx={{ maxWidth: "45em!important" }}>
+                        {fetchResults.loading && (
+                            <Box sx={{ display: "flex" }}>
+                                <CircularProgress
+                                    sx={{ marginLeft: "auto", marginRight: "auto" }}
+                                />
+                            </Box>
+                        )}
+                        {fetchResults.error && (
+                            <Box sx={{ display: "flex" }}>
+                                <Typography
+                                    sx={{
+                                        fontSize: 32,
+                                        lineHeight: "0.1em",
+                                        marginLeft: "auto",
+                                        marginRight: "auto",
+                                    }}
+                                    color="text.secondary"
+                                    gutterBottom
+                                >
+                                    {ERROR_MESSAGE}
+                                </Typography>
+                            </Box>
+                        )}
+                        {!fetchResults.loading && !fetchResults.error && (
+                            <ToggleButtonGroup
+                                color="primary"
+                                sx={{ marginBottom: "3em" }}
+                                value={infoTab}
+                                exclusive
+                                onChange={handleInfoTab}
                             >
-                                {ERROR_MESSAGE}
-                            </Typography>
-                        </Box>
-                    )}
-                    {!fetchResults.loading && !fetchResults.error && reviewsInfo(fetchResults.data)}
-                    {!fetchResults.loading && !fetchResults.error && textInfo(fetchResults.data)}
+                                <ToggleButton value="transcription">Transcription</ToggleButton>
+                                <ToggleButton value="reviews">Reviews</ToggleButton>
+                            </ToggleButtonGroup>
+                        )}
+                        {!fetchResults.loading &&
+                            !fetchResults.error &&
+                            infoTab === "transcription" &&
+                            textInfo(fetchResults.data)}
+                        {!fetchResults.loading &&
+                            !fetchResults.error &&
+                            infoTab === "reviews" &&
+                            reviewsInfo(fetchResults.data)}
+                    </Container>
                 </Container>
             </Card>
             <MKBox pt={6} px={1} mt={6}>

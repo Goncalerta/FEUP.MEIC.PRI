@@ -52,7 +52,7 @@ function SearchResults(props) {
     const subjectsToText = (subjects) => subjects.join(", ");
 
     const renderResult = (book) => (
-        <Container key={book.id}>
+        <Container key={book.id} sx={{ marginBottom: "3em" }}>
             <Typography sx={{ fontSize: 34, margin: "0" }} color="text.secondary" gutterBottom>
                 <a href={`/book/${book.id}`}>{book.title}</a>
             </Typography>
