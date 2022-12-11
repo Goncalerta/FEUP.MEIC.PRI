@@ -171,5 +171,9 @@
             "multiValued": true,
             "stored": true
         }
-    ]
+    ],
+    "add-copy-field":{
+        "source":"subjects",
+        "dest":[ "subjects_facet" ]
+    }
 }
