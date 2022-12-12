@@ -12,5 +12,5 @@ for query in [f'q{i}' for i in range(1,5)]:
         ax.set_ylim(0.0, 1.0)
         disp.plot(ax=ax)
     fig = plt.gcf()
-    fig.set_size_inches(18.5, 5.0)
+    fig.set_size_inches(18.5, 4.0)
     plt.savefig(f'prc/{query}.pdf')
