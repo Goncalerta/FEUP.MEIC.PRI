@@ -176,7 +176,7 @@ function Book() {
 
     const reviewsInfo = (book) => {
         let val = book.reviews || [];
-        if (!Array.isArray(book.reviews)) {
+        if (!Array.isArray(book.reviews) && book.reviews !== undefined) {
             val = [book.reviews];
         }
         return val.map((review) => (

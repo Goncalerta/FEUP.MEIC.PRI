@@ -2,7 +2,7 @@
 
 from rest_framework import viewsets
 from rest_framework.response import Response
-from src.booksearch.solr_api import make_query_basic, get_categories, get_book
+from src.booksearch.solr_api import make_query_basic, get_categories, more_like_this, get_book
 
 
 # class ExampleViewSet(viewsets.ViewSet):
@@ -77,9 +77,22 @@ class CategoriesViewSet(viewsets.ViewSet):
     def list(self, _request):
         return Response(get_categories())
 
+
+class MoreLikeThisViewSet(viewsets.ViewSet):
+    """
+    Viewset for getting more like this.
+    """
+
+    def list(self, request):
+        data = request.query_params
+        value = data.get("id", "0")
+        return Response(more_like_this(q=value, rows=10, start=0))
+
+
 class BookViewSet(viewsets.ViewSet):
     """
     Viewset for searching books.
     """
+
     def retrieve(self, _request, pk=None):
         return Response(get_book(pk))

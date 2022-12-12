@@ -12,6 +12,10 @@ def make_query_raw(query):
     return requests.get(f"http://{SOLR_SERVER}/solr/{SOLR_CORE}/query?{query}").json()
 
 
+def mlt_query_raw(query):
+    return requests.get(f"http://{SOLR_SERVER}/solr/{SOLR_CORE}/mlt?{query}").json()
+
+
 def make_query_basic(q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False):
     # TODO this function probably should be improved to handle more complex queries
     #      and we could even create more highlevel wrappers as needed
@@ -62,10 +66,20 @@ def make_query_quote(q="", fl="*, [child]", rows=10, start=0, sort="score desc",
         "docs": make_query_raw(f"q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
     }
 
+
 def get_categories():
     facets = make_query_raw("q=content_type:BOOK&q.op=OR&indent=true&facet=true&facet.field=subjects_facet&facet.limit=-1&rows=0")[
         "facet_counts"]["facet_fields"]["subjects_facet"]
     return [facets[i] for i in range(0, len(facets), 2)]
+
+
+def more_like_this(q=0, fl="*, [child]", rows=10, start=0, sort="score desc"):
+    mlt = mlt_query_raw(f"q=id:{q}&fl={fl}&rows={rows}&start={start}&sort={sort}")[
+        "response"]
+    mlt['docs'] = [doc for doc in mlt['docs'] if doc['content_type'] == "BOOK"]
+    mlt['num_found'] = len(mlt['docs'])
+    return mlt
+
 
 def get_book(id):
     return make_query_raw(f"q=id:{id}%20content_type:BOOK&q.op=AND&indent=true&rows=1&fl=*,%5Bchild%5D")['response']['docs'][0]
