@@ -2,9 +2,10 @@ import { Box, CircularProgress, Container, Rating, Typography } from "@mui/mater
 import PropTypes from "prop-types";
 import StarIcon from "@mui/icons-material/Star";
 import dayjs from "dayjs";
+import MKButton from "components/MKButton";
 
 function SearchResults(props) {
-    const { loading, error, data } = props;
+    const { loading, error, data, moreLikeThis } = props;
 
     const ERROR_MESSAGE = "An error occurred  while fetching results :(";
     const NO_RESULTS_MESSAGE = "No results found.";
@@ -53,7 +54,7 @@ function SearchResults(props) {
         return `${firstAuthors} and ${lastAuthor}`;
     };
 
-    const subjectsToText = (subjects) => subjects.join(", ");
+    const subjectsToText = (subjects) => subjects?.join(", ");
 
     const renderResult = (book) => (
         <Container key={book.id} sx={{ marginBottom: "3em" }}>
@@ -69,6 +70,16 @@ function SearchResults(props) {
             <Typography sx={{ fontSize: 12, margin: "0" }} color="text.secondary" gutterBottom>
                 Released on {dayjs(book.release_date).format("DD MMM YYYY")}
             </Typography>
+            <MKButton
+                variant="contained"
+                color="secondary"
+                sx={{ marginTop: "1.5em" }}
+                onClick={() => {
+                    moreLikeThis(book.id);
+                }}
+            >
+                More Like This
+            </MKButton>
             <Box
                 sx={{
                     width: 300,
@@ -144,6 +155,7 @@ SearchResults.propTypes = {
     loading: PropTypes.bool.isRequired,
     error: PropTypes.bool.isRequired,
     data: PropTypes.object.isRequired /* eslint-disable-line react/forbid-prop-types */,
+    moreLikeThis: PropTypes.func.isRequired,
 };
 
 export default SearchResults;

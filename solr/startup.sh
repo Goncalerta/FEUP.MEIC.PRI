@@ -78,6 +78,14 @@ then
     curl -X POST -H 'Content-type:application/json' --data-binary @/data/books_schema_nlp.json http://localhost:8983/solr/books/schema
 fi
 
+curl -X POST -H 'Content-type:application/json' -d '{
+  "add-requesthandler": {
+    "name": "/mlt",
+    "class": "solr.MoreLikeThisHandler",
+    "defaults": {"mlt.fl": "text"}
+  }
+}' http://localhost:8983/solr/books/config
+
 # Wait for Solr to update the schema
 sleep 10
 

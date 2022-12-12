@@ -71,7 +71,7 @@ function AdvancedSearch(props) {
 
     const onSearch = async (text) => {
         props.onStartSearch();
-        api.get("search/", {
+        api.get("search", {
             params: {
                 value: text,
             },

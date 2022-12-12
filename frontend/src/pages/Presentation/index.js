@@ -57,9 +57,22 @@ function Presentation() {
         setSearchResults({ first_load: false, loading: true, data: [], error: false });
     };
 
+    const moreLikeThis = async (bookId) => {
+        console.log(bookId);
+        onStartSearch();
+        api.get("moreLikeThis", { params: { id: bookId } })
+            .then((response) => {
+                onSearch(response.data);
+            })
+            .catch((e) => {
+                console.log("Error: ", e);
+                onError();
+            });
+    };
+
     const browse = async () => {
         try {
-            const response = await api.get("browse/", { page: 0 });
+            const response = await api.get("browse", { page: 0 });
             if (searchResults.first_load) {
                 if (response.status === 200) {
                     setSearchResults({
@@ -120,6 +133,7 @@ function Presentation() {
                     data={searchResults.data}
                     loading={searchResults.loading}
                     error={searchResults.error}
+                    moreLikeThis={moreLikeThis}
                 />
             </Card>
             <MKBox pt={6} px={1} mt={6}>
