@@ -14,3 +14,15 @@ for query in [f'q{i}' for i in range(1,5)]:
     fig = plt.gcf()
     fig.set_size_inches(18.5, 4.0)
     plt.savefig(f'prc/{query}.pdf')
+
+
+curves = pd.read_csv('prc/sys_3.csv')
+fig, axs = plt.subplots(1, 4, sharey=True)
+for query in range(1,5):
+    disp = PrecisionRecallDisplay(curves[f'q{query}'], np.arange(0.0, 1.1, 0.1))
+    ax = axs[query-1]
+    ax.set_ylim(0.0, 1.0)
+    disp.plot(ax=ax)
+fig = plt.gcf()
+fig.set_size_inches(18.5, 4.0)
+plt.savefig(f'prc/sys_3.pdf')
