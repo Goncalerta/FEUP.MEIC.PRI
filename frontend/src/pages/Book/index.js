@@ -51,7 +51,7 @@ function Book() {
 
     const fetchBook = async () => {
         try {
-            const response = await api.get("book", { id });
+            const response = await api.get(`book/${id}`);
             if (response.status === 200) {
                 setFetchResults({
                     loading: false,
@@ -69,7 +69,11 @@ function Book() {
     useEffect(() => fetchBook(), []);
 
     const authorsToText = (authors) => {
-        const authorsList = authors.map((author) => {
+        let val = authors || [];
+        if (!Array.isArray(authors)) {
+            val = [authors];
+        }
+        const authorsList = val.map((author) => {
             /* eslint-disable camelcase */
             let { first_name, last_name, year_of_birth, year_of_death } = author;
             if (!year_of_birth) {
@@ -97,6 +101,10 @@ function Book() {
 
             return `${name} (${year})`;
         });
+
+        if (authorsList.length === 0) {
+            return "Unknown";
+        }
 
         const lastAuthor = authorsList.pop();
         if (authorsList.length === 0) {
@@ -131,27 +139,34 @@ function Book() {
             </MKTypography>
             <Box
                 sx={{
-                    width: 200,
                     display: "flex",
                     alignItems: "center",
                 }}
             >
-                <Rating
-                    value={book.rating}
-                    readOnly
-                    precision={0.5}
-                    emptyIcon={
-                        <StarIcon style={{ color: "white", opacity: 0.3 }} fontSize="inherit" />
-                    }
-                />
-                <MKTypography
-                    variant="body1"
-                    color="white"
-                    opacity={0.8}
-                    sx={{ fontSize: 14, margin: "0", marginLeft: "0.2em", lineHeight: "0.1em" }}
-                >
-                    • {book.num_ratings} ratings
-                </MKTypography>
+                {book.rating ? (
+                    <Rating
+                        value={book.rating}
+                        readOnly
+                        precision={0.5}
+                        emptyIcon={
+                            <StarIcon style={{ color: "white", opacity: 0.3 }} fontSize="inherit" />
+                        }
+                    />
+                ) : (
+                    ""
+                )}
+                {book.num_ratings ? (
+                    <MKTypography
+                        variant="body1"
+                        color="white"
+                        opacity={0.8}
+                        sx={{ fontSize: 14, margin: "0", marginLeft: "0.2em", lineHeight: "0.1em" }}
+                    >
+                        • {book.num_ratings} ratings
+                    </MKTypography>
+                ) : (
+                    ""
+                )}
             </Box>
             <MKTypography variant="body1" color="white" opacity={0.8} mt={1} mb={3}>
                 Released on {dayjs(book.release_date).format("DD MMM YYYY")}
@@ -159,57 +174,66 @@ function Book() {
         </>
     );
 
-    const reviewsInfo = (book) =>
-        book.reviews.map((review) => (
+    const reviewsInfo = (book) => {
+        let val = book.reviews || [];
+        if (!Array.isArray(book.reviews)) {
+            val = [book.reviews];
+        }
+        return val.map((review) => (
             <Container key={review.id} sx={{ marginBottom: "3em", textAlign: "justify" }}>
                 <Typography sx={{ fontSize: 34, margin: "0" }} color="text.secondary" gutterBottom>
                     <b>
-                        {review.username && review.username !== "" ? review.username : "Anonymous"}
+                        {review.user_name && review.user_name !== ""
+                            ? review.user_name
+                            : "Anonymous"}
                     </b>{" "}
                     on {dayjs(review.date).format("DD MMM YYYY")}
                 </Typography>
                 <Box
                     sx={{
                         marginBottom: "0.5em",
-                        width: 200,
                         display: "flex",
                         alignItems: "center",
                     }}
                 >
-                    <Rating
-                        value={review.rating}
-                        readOnly
-                        precision={0.5}
-                        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-                    />
+                    {review.rating && (
+                        <Rating
+                            value={review.rating}
+                            readOnly
+                            precision={0.5}
+                            emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                        />
+                    )}
                     <Typography
                         sx={{ fontSize: 14, margin: "0", marginLeft: "0.2em", lineHeight: "0.1em" }}
                         color="text.secondary"
                         gutterBottom
                     >
-                        • {review.num_likes ? review.num_likes : 0} likes
+                        {review.rating && "•"} {review.num_likes ? review.num_likes : 0} likes
                     </Typography>
                 </Box>
 
-                {review.text.split("\n").map((paragraph, index) => (
-                    <div
-                        style={{ marginBottom: "1.5em" }}
-                        key={index /* eslint-disable-line react/no-array-index-key */}
-                    >
-                        <MKTypography
-                            variant="body1"
-                            sx={({ breakpoints, typography: { size } }) => ({
-                                [breakpoints.down("md")]: {
-                                    fontSize: size["3l"],
-                                },
-                            })}
+                {review.text &&
+                    review.text.split("\n").map((paragraph, index) => (
+                        <div
+                            style={{ marginBottom: "1.5em" }}
+                            key={index /* eslint-disable-line react/no-array-index-key */}
                         >
-                            {paragraph}
-                        </MKTypography>
-                    </div>
-                ))}
+                            <MKTypography
+                                variant="body1"
+                                sx={({ breakpoints, typography: { size } }) => ({
+                                    [breakpoints.down("md")]: {
+                                        fontSize: size["3l"],
+                                    },
+                                })}
+                            >
+                                {paragraph}
+                            </MKTypography>
+                        </div>
+                    ))}
             </Container>
         ));
+    };
 
     const textInfo = (book) => (
         <>
