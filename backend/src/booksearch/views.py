@@ -30,7 +30,7 @@ class SearchViewSet(viewsets.ViewSet):
         value = data.get("value", "")
         exact = data.get("exact_query", False)
         quote = data.get("quote", False)
-        print("quote: ", quote, "exact: ", exact, "value: ", value)
+
         return Response(make_query_basic(q=value, rows=10, start=0, exact=exact)) if not quote \
             else Response(make_query_quote(q=value, rows=10, start=0, exact=exact))
 
@@ -43,7 +43,8 @@ class ExactSearchViewSet(viewsets.ViewSet):
     def list(self, request):
         data = request.query_params
         value = data.get("value", "")
-        return Response(make_query_exact(finalq=value, rows=10, start=0))
+        quote = data.get("quote", False)
+        return Response(make_query_exact(finalq=value, rows=10, start=0, quote=quote))
 
 class AdvancedSearchViewSet(viewsets.ViewSet):
     """
@@ -67,11 +68,12 @@ class AdvancedSearchViewSet(viewsets.ViewSet):
         aliveAfter = data.get("aliveAfter", None)
         aliveBefore = data.get("aliveBefore", None)
         exact = data.get("exact_query", False)
+        quote = data.get("quote", False)
 
         return Response(make_query_advanced(
             q=value, rows=10, start=0, exact=exact, title=title, releasedAfter=releasedAfter, releasedBefore=releasedBefore,
             category=category, ratingMin=ratingMin, ratingMax=ratingMax, minNumRating=minNumRating, maxNumRating=maxNumRating,
-            authorFirstName=authorFirstName, authorLastName=authorLastName, aliveAfter=aliveAfter, aliveBefore=aliveBefore))
+            authorFirstName=authorFirstName, authorLastName=authorLastName, aliveAfter=aliveAfter, aliveBefore=aliveBefore, quote=quote))
 
 
 class BrowseViewSet(viewsets.ViewSet):
@@ -99,7 +101,7 @@ class MoreLikeThisViewSet(viewsets.ViewSet):
 
     def list(self, request):
         data = request.query_params
-        value = data.get("id", "0")
+        value = data.get("id", 0)
         return Response(more_like_this(q=value, rows=10, start=0))
 
 

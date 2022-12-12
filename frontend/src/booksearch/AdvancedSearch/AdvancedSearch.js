@@ -75,6 +75,7 @@ function AdvancedSearch(props) {
         props.onStartSearch();
         api.get("advancedSearch", {
             params: {
+                quote: quote ? quote : null,
                 value:
                     document.getElementById("searchBar").value !== ""
                         ? document.getElementById("searchBar").value

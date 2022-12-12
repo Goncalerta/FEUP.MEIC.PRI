@@ -19,6 +19,7 @@ def mlt_query_raw(query):
 def make_query_basic(q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False):
     fields = ["title", "subjects", "text"]
     final_q = 'content_type: "BOOK"'
+    exact_final_q = final_q
     result = ""
 
     def boost(field):
@@ -35,31 +36,35 @@ def make_query_basic(q="", fl="*, [child]", rows=10, start=0, sort="score desc",
         result += keyword_did_you_mean + " "
         final_q += " AND (" + (" OR ").join([
             f'({field}:"{keyword_did_you_mean}"~)^{boost(field)}' for field in fields]) + ")"
+        exact_final_q += " AND (" + (" OR ").join([
+            f'({field}:"{keyword}"~)^{boost(field)}' for field in fields]) + ")"
 
     return {
         "exact_query": exact,
         "orig_query": q,
-        "final_q": final_q,
+        "final_q": exact_final_q,
         "did_you_mean": result.strip(),
         "docs": make_query_raw(f"q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
     }
 
 
-def make_query_exact(finalq, fl="*, [child]", rows=10, start=0, sort="score desc", exact=True):
+def make_query_exact(finalq, fl="*, [child]", rows=10, start=0, sort="score desc", exact=True, quote=False):
     return {
         "exact_query": exact,
         "orig_query": finalq,
         "final_q": finalq,
         "did_you_mean": finalq,
+        "quote": quote,
         "docs": make_query_raw(f"q={finalq}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
     }
 
 
 def make_query_advanced(
         q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False, title="", releasedAfter="", releasedBefore="",
-        category="", ratingMin="", ratingMax="", minNumRating="", maxNumRating="", authorFirstName="", authorLastName="", aliveAfter="", aliveBefore=""):
+        category="", ratingMin="", ratingMax="", minNumRating="", maxNumRating="", authorFirstName="", authorLastName="", aliveAfter="", aliveBefore="", quote=False):
     fields = ["title", "subjects", "text"]
     final_q = 'content_type: "BOOK"'
+    exact_final_q = final_q
     result = ""
 
     def boost(field):
@@ -70,34 +75,54 @@ def make_query_advanced(
         if field == "text":
             return 1
 
-    if q is not None:
+    quote = quote and q is not None
+    if quote:
+        result = str((TextBlob(q)).correct())
+        exact_final_q = 'content_type: "BOOK"' + \
+            (" AND " + f'text:"{q}"~' if result else "")
+        if exact:
+            final_q = exact_final_q
+        else:
+            final_q = 'content_type: "BOOK"' + \
+                (" AND " + f'text:"{result}"~' if result else "")
+    elif q is not None:
         for keyword in q.split():
             keyword_did_you_mean = keyword if exact else str(
                 (TextBlob(keyword)).correct())
             result += keyword_did_you_mean + " "
             final_q += " AND (" + (" OR ").join([
                 f'({field}:"{keyword_did_you_mean}"~)^{boost(field)}' for field in fields]) + ")"
+            exact_final_q += " AND (" + (" OR ").join([
+                f'({field}:"{keyword}"~)^{boost(field)}' for field in fields]) + ")"
     else:
         q = ""
         result = ""
 
     if title is not None:
         final_q += f' AND title:"{title}"~'
+        exact_final_q += f' AND title:"{title}"~'
     if category is not None:
         final_q += f' AND subjects:"{category}"~'
+        exact_final_q += f' AND subjects:"{category}"~'
     if ratingMin is not None and ratingMax is not None:
         final_q += f' AND rating:[{ratingMin} TO {ratingMax}]'
+        exact_final_q += f' AND rating:[{ratingMin} TO {ratingMax}]'
     elif ratingMin is not None:
         final_q += f' AND rating:[{ratingMin} TO *]'
+        exact_final_q += f' AND rating:[{ratingMin} TO *]'
     elif ratingMax is not None:
         final_q += f' AND rating:[* TO {ratingMax}]'
+        exact_final_q += f' AND rating:[* TO {ratingMax}]'
 
     if minNumRating is not None and maxNumRating is not None:
         final_q += f' AND num_ratings:[{minNumRating} TO {maxNumRating}]'
+        exact_final_q += f' AND num_ratings:[{minNumRating} TO {maxNumRating}]'
     elif minNumRating is not None:
         final_q += f' AND num_ratings:[{minNumRating} TO *]'
+        exact_final_q += f' AND num_ratings:[{minNumRating} TO *]'
     elif maxNumRating is not None:
         final_q += f' AND num_ratings:[* TO {maxNumRating}]'
+        exact_final_q += f' AND num_ratings:[* TO {maxNumRating}]'
 
     if releasedAfter is not None:
         releasedAfter = releasedAfter[:19] + 'Z'
@@ -106,14 +131,19 @@ def make_query_advanced(
 
     if releasedAfter is not None and releasedBefore is not None:
         final_q += f' AND release_date:[{releasedAfter} TO {releasedBefore}]'
+        exact_final_q += f' AND release_date:[{releasedAfter} TO {releasedBefore}]'
     elif releasedAfter is not None:
         final_q += f' AND release_date:[{releasedAfter} TO *]'
+        exact_final_q += f' AND release_date:[{releasedAfter} TO *]'
     elif releasedBefore is not None:
         final_q += f' AND release_date:[* TO {releasedBefore}]'
+        exact_final_q += f' AND release_date:[* TO {releasedBefore}]'
 
     if authorFirstName is not None or authorLastName is not None or aliveAfter is not None or aliveBefore is not None:
         final_q = final_q.replace('"', '\\"')
         final_q = '{' + f'!parent which="{final_q}"' + '}'
+        exact_final_q = exact_final_q.replace('"', '\\"')
+        exact_final_q = '{' + f'!parent which="{exact_final_q}"' + '}'
 
     sub_q = ''
     if authorFirstName is not None:
@@ -131,22 +161,38 @@ def make_query_advanced(
         sub_q += f' AND year_of_birth:[* TO {aliveBefore}]'
 
     final_q += sub_q[5:]
+    exact_final_q += sub_q[5:]
+    if quote:
+        query = make_query_raw(
+            f"hl.fl=text&hl=true&indent=true&hl.simple.pre=<strong>&hl.simple.post=</strong>&q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")
+
+        docs = query['response']['docs']
+        print(query['highlighting'])
+        # add highlight field to each doc
+        for i in range(len(docs)):
+            if query['highlighting'][docs[i]['id']] and len(query['highlighting'][docs[i]['id']]['text']) > 0:
+                docs[i]['highlight'] = query['highlighting'][docs[i]['id']]['text'][0]
+    else:
+        docs = make_query_raw(f"q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")[
+            'response']['docs']
 
     return {
         "exact_query": exact,
         "orig_query": q,
-        "final_q": final_q,
+        "final_q": exact_final_q,
         "did_you_mean": result.strip(),
-        "docs": make_query_raw(f"q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
+        "quote": quote,
+        "docs": docs
     }
 
 
 def make_query_quote(q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False):
 
     result = str((TextBlob(q)).correct())
+    exact_final_q = 'content_type: "BOOK"' + \
+        (" AND " + f'text:"{q}"~' if result else "")
     if exact:
-        final_q = 'content_type: "BOOK"' + \
-            (" AND " + f'text:"{q}"~' if result else "")
+        final_q = exact_final_q
     else:
         final_q = 'content_type: "BOOK"' + \
             (" AND " + f'text:"{result}"~' if result else "")
@@ -166,7 +212,7 @@ def make_query_quote(q="", fl="*, [child]", rows=10, start=0, sort="score desc",
         "exact_query": exact,
         "orig_query": q,
         "did_you_mean": result,
-        "final_q": final_q,
+        "final_q": exact_final_q,
         "quote": True,
         "docs": docs,
     }

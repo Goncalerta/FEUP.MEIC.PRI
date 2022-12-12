@@ -76,16 +76,6 @@ function SearchResults(props) {
             <Typography sx={{ fontSize: 12, margin: "0" }} color="text.secondary" gutterBottom>
                 Released on {dayjs(book.release_date).format("DD MMM YYYY")}
             </Typography>
-            <MKButton
-                variant="contained"
-                color="secondary"
-                sx={{ marginTop: "1.5em" }}
-                onClick={() => {
-                    moreLikeThis(book.id);
-                }}
-            >
-                More Like This
-            </MKButton>
             <Box
                 sx={{
                     width: 300,
@@ -106,7 +96,17 @@ function SearchResults(props) {
                 >
                     • {book.num_ratings} ratings
                 </Typography>
-            </Box>
+            </Box>            
+            <MKButton
+                variant="contained"
+                color="secondary"
+                sx={{ marginTop: "1.5em" }}
+                onClick={() => {
+                    moreLikeThis(book.id);
+                }}
+            >
+                More Like This
+            </MKButton>
             {
                 book?.highlight && (
                     <Card sx={{ padding:"1.2em", margin:"0.5em", marginTop:"1em", width:"auto"}}>
@@ -119,7 +119,6 @@ function SearchResults(props) {
                 </Typography>
             </Card>)
             }
-            
         </Container>
     );
 
