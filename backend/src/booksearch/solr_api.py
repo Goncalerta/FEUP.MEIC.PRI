@@ -45,24 +45,32 @@ def make_query_basic(q="", fl="*, [child]", rows=10, start=0, sort="score desc",
         "docs": make_query_raw(f"q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
     }
 
+
 def make_query_advanced(
-    q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False, title="", releasedAfter="", releasedBefore="",
-    category="", ratingMin="", ratingMax="", minNumRating="", maxNumRating="", authorFirstName="", authorLastName="", aliveAfter="", aliveBefore=""):
+        q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False, title="", releasedAfter="", releasedBefore="",
+        category="", ratingMin="", ratingMax="", minNumRating="", maxNumRating="", authorFirstName="", authorLastName="", aliveAfter="", aliveBefore=""):
     # if title != "":
     #     q += " AND title:" + title
     pass
 
+
 def make_query_quote(q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False):
 
     result = str((TextBlob(q)).correct())
+    if exact:
+        final_q = 'content_type: "BOOK"' + \
+            (" AND " + f'text:"{q}"~' if result else "")
+    else:
+        final_q = 'content_type: "BOOK"' + \
+            (" AND " + f'text:"{result}"~' if result else "")
 
-    final_q = 'content_type: "BOOK"' + \
-        (" AND " + f'text:"{result}"~' if result else "")
+    print("Making query quote: " + final_q)
 
     return {
         "exact_query": exact,
         "orig_query": q,
         "did_you_mean": result,
+        "quote": True,
         "docs": make_query_raw(f"q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
     }
 

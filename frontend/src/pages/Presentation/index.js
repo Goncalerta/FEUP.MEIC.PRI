@@ -64,6 +64,7 @@ function Presentation() {
             params: {
                 value: query.orig_query,
                 exact_query: true,
+                quote: query.quote ? query.quote : null,
                 // TODO advanced search fields
             },
         })

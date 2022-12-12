@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
-import { Autocomplete } from "@mui/material";
+import { Autocomplete, Checkbox, Typography } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
@@ -18,7 +18,7 @@ import MKButton from "components/MKButton";
 
 function AdvancedSearch(props) {
     const [open, setOpen] = useState(false);
-
+    const [quote, setQuote] = useState(false);
     const [categories, setCategories] = useState([
         "Pastoral poetry",
         "English poetry -- 18th century",
@@ -134,9 +134,11 @@ function AdvancedSearch(props) {
             return null;
         }
         props.onStartSearch();
+        console.log("Searching for: " + text)
         api.get("search", {
             params: {
                 value: text,
+                quote: quote ? quote : null,
             },
         })
             .then((response) => {
@@ -165,20 +167,31 @@ function AdvancedSearch(props) {
             }}
         >
             <SearchBar onSearch={onSearch} />
-            <Box
-                onClick={handleAdvancedClick}
-                style={{
-                    marginLeft: "auto",
-                    marginRight: "0.75em",
-                    marginTop: "0.5em",
-                    display: "flex",
-                    alignItems: "center",
-                    userSelect: "none",
-                    color: "white",
-                    cursor: "pointer",
-                }}
-            >
-                Advanced {open ? <ExpandLess /> : <ExpandMore />}
+            
+            <Box style={{ display: "flex", width: "100%" }}>
+                <Box style={{ display: "flex", alignItems: "center"}}>
+                    <Checkbox
+                        checked={quote}
+                        onChange={() => setQuote(!quote)}
+                        inputProps={{ "aria-label": "controlled" }}
+                    />
+                    <Typography style={{ color: "white"}}>Quote Search</Typography>
+                </Box>
+                <Box
+                    onClick={handleAdvancedClick}
+                    style={{
+                        marginLeft: "auto",
+                        marginRight: "0.75em",
+                        marginTop: "0.5em",
+                        display: "flex",
+                        alignItems: "center",
+                        userSelect: "none",
+                        color: "white",
+                        cursor: "pointer",
+                    }}
+                >
+                    Advanced {open ? <ExpandLess /> : <ExpandMore />}
+                </Box>
             </Box>
 
             <Collapse in={open} timeout="auto" unmountOnExit>
