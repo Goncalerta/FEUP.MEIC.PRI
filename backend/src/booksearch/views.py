@@ -32,6 +32,33 @@ class SearchViewSet(viewsets.ViewSet):
         exact = data.get("exact_query", False)
         return Response(make_query_basic(q=value, rows=10, start=0, exact=exact))
 
+class AdvancedSearchViewSet(viewsets.ViewSet):
+    """
+    Viewset for searching books.
+    """
+
+    def list(self, request):
+        data = request.query_params
+
+        value = data.get("value", None)
+        title = data.get("title", None)
+        releasedAfter = data.get("releasedAfter", None)
+        releasedBefore = data.get("releasedBefore", None)
+        category = data.get("category", None)
+        ratingMin = data.get("ratingMin", None)
+        ratingMax = data.get("ratingMax", None)
+        minNumRating = data.get("minNumRating", None)
+        maxNumRating = data.get("maxNumRating", None)
+        authorFirstName = data.get("authorFirstName", None)
+        authorLastName = data.get("authorLastName", None)
+        aliveAfter = data.get("aliveAfter", None)
+        aliveBefore = data.get("aliveBefore", None)
+        exact = data.get("exact_query", False)
+
+        return Response(make_query_advanced(
+            q=value, rows=10, start=0, exact=exact, title=title, releasedAfter=releasedAfter, releasedBefore=releasedBefore, 
+            category=category, ratingMin=ratingMin, ratingMax=ratingMax, minNumRating=minNumRating, maxNumRating=maxNumRating, 
+            authorFirstName=authorFirstName, authorLastName=authorLastName, aliveAfter=aliveAfter, aliveBefore=aliveBefore))
 
 class BrowseViewSet(viewsets.ViewSet):
     """

@@ -45,6 +45,12 @@ def make_query_basic(q="", fl="*, [child]", rows=10, start=0, sort="score desc",
         "docs": make_query_raw(f"q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
     }
 
+def make_query_advanced(
+    q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False, title="", releasedAfter="", releasedBefore="",
+    category="", ratingMin="", ratingMax="", minNumRating="", maxNumRating="", authorFirstName="", authorLastName="", aliveAfter="", aliveBefore=""):
+    # if title != "":
+    #     q += " AND title:" + title
+    pass
 
 def make_query_quote(q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False):
 
