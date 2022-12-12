@@ -69,7 +69,68 @@ function AdvancedSearch(props) {
         setAuthorAliveEndDate(newValue);
     };
 
-    const onSearch = async (text) => {
+    const onAdvancedSearch = () => {
+        props.onStartSearch();
+        api.get("advancedSearch", {
+            params: {
+                value:
+                    document.getElementById("searchBar").value !== ""
+                        ? document.getElementById("searchBar").value
+                        : null,
+                title:
+                    document.getElementById("title").value !== ""
+                        ? document.getElementById("title").value
+                        : null,
+                releasedAfter: fromReleaseDate,
+                releasedBefore: toReleaseDate,
+                category:
+                    document.getElementById("category").value !== ""
+                        ? document.getElementById("category").value
+                        : null,
+                ratingMin:
+                    document.getElementById("rating-min").value !== ""
+                        ? document.getElementById("rating-min").value
+                        : null,
+                ratingMax:
+                    document.getElementById("rating-max").value !== ""
+                        ? document.getElementById("rating-max").value
+                        : null,
+                minNumRating:
+                    document.getElementById("min-num-rating").value !== ""
+                        ? document.getElementById("min-num-rating").value
+                        : null,
+                maxNumRating:
+                    document.getElementById("max-num-rating").value !== ""
+                        ? document.getElementById("max-num-rating").value
+                        : null,
+                authorFirstName:
+                    document.getElementById("author-first-name").value !== ""
+                        ? document.getElementById("author-first-name").value
+                        : null,
+                authorLastName:
+                    document.getElementById("author-last-name").value !== ""
+                        ? document.getElementById("author-last-name").value
+                        : null,
+                aliveAfter: authorAliveBeginDate,
+                aliveBefore: authorAliveEndDate,
+            },
+        })
+            .then((response) => {
+                props.onSearch(response.data);
+            })
+            .catch((e) => {
+                console.log("Error", e);
+                props.onError();
+            });
+    };
+
+    const onSearch = (text) => {
+        if (open) {
+            return onAdvancedSearch();
+        }
+        if (text === "") {
+            return null;
+        }
         props.onStartSearch();
         api.get("search", {
             params: {
@@ -83,6 +144,7 @@ function AdvancedSearch(props) {
                 console.log("Error", e);
                 props.onError();
             });
+        return null;
     };
 
     return (
@@ -143,6 +205,7 @@ function AdvancedSearch(props) {
                             </Grid>
                             <Grid item xs={3}>
                                 <DesktopDatePicker
+                                    id="releasedAfter"
                                     label="Released after"
                                     inputFormat="DD/MM/YYYY"
                                     value={fromReleaseDate}
@@ -161,6 +224,7 @@ function AdvancedSearch(props) {
                             </Grid>
                             <Grid item xs={3}>
                                 <DesktopDatePicker
+                                    id="releasedBefore"
                                     label="Released before"
                                     inputFormat="DD/MM/YYYY"
                                     value={toReleaseDate}
@@ -275,6 +339,7 @@ function AdvancedSearch(props) {
                             </Grid>
                             <Grid item xs={3}>
                                 <DesktopDatePicker
+                                    id="aliveAfter"
                                     label="Alive after"
                                     inputFormat="DD/MM/YYYY"
                                     value={authorAliveBeginDate}
@@ -293,6 +358,7 @@ function AdvancedSearch(props) {
                             </Grid>
                             <Grid item xs={3}>
                                 <DesktopDatePicker
+                                    id="aliveBefore"
                                     label="Alive before"
                                     inputFormat="DD/MM/YYYY"
                                     value={authorAliveEndDate}
@@ -310,7 +376,11 @@ function AdvancedSearch(props) {
                                 />
                             </Grid>
                         </Grid>
-                        <MKButton variant="contained" sx={{ marginTop: "1.5em" }}>
+                        <MKButton
+                            variant="contained"
+                            sx={{ marginTop: "1.5em" }}
+                            onClick={onAdvancedSearch}
+                        >
                             Search
                         </MKButton>
                     </Box>
