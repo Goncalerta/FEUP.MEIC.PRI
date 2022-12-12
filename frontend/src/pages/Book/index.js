@@ -30,6 +30,7 @@ import {
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import dayjs from "dayjs";
+import MKBadge from "components/MKBadge";
 
 function Book() {
     const { id } = useParams();
@@ -118,6 +119,18 @@ function Book() {
 
     const subjectsToText = (subjects) => subjects.join(", ");
 
+    const getBestEntity = (nerEntities) => {
+        // conver nerEntities to lower case
+        const nerEntitiesLower = nerEntities.map((entity) => entity.toLowerCase());
+        // get the entity that appears the most
+        const bestEntity = nerEntitiesLower.reduce(
+            (a, b, i, arr) =>
+                arr.filter((v) => v === a).length >= arr.filter((v) => v === b).length ? a : b,
+            null
+        );
+        return bestEntity;
+    };
+
     const bookInfo = (book) => (
         <>
             <MKTypography
@@ -168,6 +181,16 @@ function Book() {
                     ""
                 )}
             </Box>
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                }}
+            >
+                {book.location_book ? <MKBadge value={getBestEntity(book.location_book)} /> : ""}
+                {book.person_book ? <MKBadge value={getBestEntity(book.person_book)} /> : ""}
+                {book.date_book ? <MKBadge value={getBestEntity(book.date_book)} /> : ""}
+            </Box>
             <MKTypography variant="body1" color="white" opacity={0.8} mt={1} mb={3}>
                 Released on {dayjs(book.release_date).format("DD MMM YYYY")}
             </MKTypography>
@@ -176,7 +199,7 @@ function Book() {
 
     const reviewsInfo = (book) => {
         let val = book.reviews || [];
-        if (!Array.isArray(book.reviews)) {
+        if (!Array.isArray(book.reviews) && book.reviews !== undefined) {
             val = [book.reviews];
         }
         return val.map((review) => (

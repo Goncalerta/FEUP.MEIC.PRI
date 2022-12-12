@@ -2,8 +2,7 @@
 
 from rest_framework import viewsets
 from rest_framework.response import Response
-from src.booksearch.solr_api import make_query_basic, get_categories, get_book, make_query_advanced
-
+from src.booksearch.solr_api import make_query_basic, get_categories, more_like_this, get_book, make_query_advanced, make_query_quote, make_query_exact
 
 # class ExampleViewSet(viewsets.ViewSet):
 #     """
@@ -30,7 +29,11 @@ class SearchViewSet(viewsets.ViewSet):
         data = request.query_params
         value = data.get("value", "")
         exact = data.get("exact_query", False)
-        return Response(make_query_basic(q=value, rows=10, start=0, exact=exact))
+        quote = data.get("quote", False)
+        print("quote: ", quote, "exact: ", exact, "value: ", value)
+        return Response(make_query_basic(q=value, rows=10, start=0, exact=exact)) if not quote \
+            else Response(make_query_quote(q=value, rows=10, start=0, exact=exact))
+
 
 class ExactSearchViewSet(viewsets.ViewSet):
     """
@@ -66,9 +69,10 @@ class AdvancedSearchViewSet(viewsets.ViewSet):
         exact = data.get("exact_query", False)
 
         return Response(make_query_advanced(
-            q=value, rows=10, start=0, exact=exact, title=title, releasedAfter=releasedAfter, releasedBefore=releasedBefore, 
-            category=category, ratingMin=ratingMin, ratingMax=ratingMax, minNumRating=minNumRating, maxNumRating=maxNumRating, 
+            q=value, rows=10, start=0, exact=exact, title=title, releasedAfter=releasedAfter, releasedBefore=releasedBefore,
+            category=category, ratingMin=ratingMin, ratingMax=ratingMax, minNumRating=minNumRating, maxNumRating=maxNumRating,
             authorFirstName=authorFirstName, authorLastName=authorLastName, aliveAfter=aliveAfter, aliveBefore=aliveBefore))
+
 
 class BrowseViewSet(viewsets.ViewSet):
     """
@@ -87,9 +91,22 @@ class CategoriesViewSet(viewsets.ViewSet):
     def list(self, _request):
         return Response(get_categories())
 
+
+class MoreLikeThisViewSet(viewsets.ViewSet):
+    """
+    Viewset for getting more like this.
+    """
+
+    def list(self, request):
+        data = request.query_params
+        value = data.get("id", "0")
+        return Response(more_like_this(q=value, rows=10, start=0))
+
+
 class BookViewSet(viewsets.ViewSet):
     """
     Viewset for searching books.
     """
+
     def retrieve(self, _request, pk=None):
         return Response(get_book(pk))

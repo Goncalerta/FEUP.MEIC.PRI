@@ -74,6 +74,19 @@ function Presentation() {
             });
     };
 
+    const moreLikeThis = async (bookId) => {
+        console.log(bookId);
+        onStartSearch();
+        api.get("moreLikeThis", { params: { id: bookId } })
+            .then((response) => {
+                onSearch(response.data);
+            })
+            .catch((e) => {
+                console.log("Error: ", e);
+                onError();
+            });
+    };
+
     const browse = async () => {
         try {
             const response = await api.get("browse", { page: 0 });
@@ -137,6 +150,7 @@ function Presentation() {
                     data={searchResults.data}
                     loading={searchResults.loading}
                     error={searchResults.error}
+                    moreLikeThis={moreLikeThis}
                     exactSearch={exactSearch}
                 />
             </Card>
