@@ -71,7 +71,7 @@ function Book() {
 
     const authorsToText = (authors) => {
         let val = authors || [];
-        if (!Array.isArray(authors)) {
+        if (!Array.isArray(authors) && authors) {
             val = [authors];
         }
         const authorsList = val.map((author) => {
