@@ -58,11 +58,11 @@ function Presentation() {
     };
 
     const exactSearch = async (query) => {
-        console.log(query);
         onStartSearch();
         api.get("exactSearch", {
             params: {
                 value: query.final_q,
+                quote: query.quote ? "true" : "false",
             },
         })
             .then((response) => {
