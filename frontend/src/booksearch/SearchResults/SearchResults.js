@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { Box, CircularProgress, Container, Rating, Typography } from "@mui/material";
+import { Box, Card, CircularProgress, Container, Rating, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import StarIcon from "@mui/icons-material/Star";
 import dayjs from "dayjs";
@@ -107,6 +107,19 @@ function SearchResults(props) {
                     • {book.num_ratings} ratings
                 </Typography>
             </Box>
+            {
+                book?.highlight && (
+                    <Card sx={{ padding:"2em", margin:"0.5em"}}>
+                <Typography
+                        sx={{ fontSize: 14}}
+                        color="text.secondary"
+                        gutterBottom
+                        dangerouslySetInnerHTML={{ __html: `...${book.highlight}...` }}
+                    >
+                </Typography>
+            </Card>)
+            }
+            
         </Container>
     );
 

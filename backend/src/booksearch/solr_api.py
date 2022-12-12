@@ -44,6 +44,7 @@ def make_query_basic(q="", fl="*, [child]", rows=10, start=0, sort="score desc",
         "docs": make_query_raw(f"q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
     }
 
+
 def make_query_exact(finalq, fl="*, [child]", rows=10, start=0, sort="score desc", exact=True):
     return {
         "exact_query": exact,
@@ -53,9 +54,10 @@ def make_query_exact(finalq, fl="*, [child]", rows=10, start=0, sort="score desc
         "docs": make_query_raw(f"q={finalq}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
     }
 
+
 def make_query_advanced(
-    q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False, title="", releasedAfter="", releasedBefore="",
-    category="", ratingMin="", ratingMax="", minNumRating="", maxNumRating="", authorFirstName="", authorLastName="", aliveAfter="", aliveBefore=""):
+        q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False, title="", releasedAfter="", releasedBefore="",
+        category="", ratingMin="", ratingMax="", minNumRating="", maxNumRating="", authorFirstName="", authorLastName="", aliveAfter="", aliveBefore=""):
     fields = ["title", "subjects", "text"]
     final_q = 'content_type: "BOOK"'
     result = ""
@@ -89,14 +91,14 @@ def make_query_advanced(
         final_q += f' AND rating:[{ratingMin} TO *]'
     elif ratingMax is not None:
         final_q += f' AND rating:[* TO {ratingMax}]'
-    
+
     if minNumRating is not None and maxNumRating is not None:
         final_q += f' AND num_ratings:[{minNumRating} TO {maxNumRating}]'
     elif minNumRating is not None:
         final_q += f' AND num_ratings:[{minNumRating} TO *]'
     elif maxNumRating is not None:
         final_q += f' AND num_ratings:[* TO {maxNumRating}]'
-    
+
     if releasedAfter is not None:
         releasedAfter = releasedAfter[:19] + 'Z'
     if releasedBefore is not None:
@@ -108,26 +110,26 @@ def make_query_advanced(
         final_q += f' AND release_date:[{releasedAfter} TO *]'
     elif releasedBefore is not None:
         final_q += f' AND release_date:[* TO {releasedBefore}]'
-    
+
     if authorFirstName is not None or authorLastName is not None or aliveAfter is not None or aliveBefore is not None:
         final_q = final_q.replace('"', '\\"')
         final_q = '{' + f'!parent which="{final_q}"' + '}'
-    
+
     sub_q = ''
     if authorFirstName is not None:
         sub_q += f' AND first_name:"{authorFirstName}"~'
-    
+
     if authorLastName is not None:
         sub_q += f' AND last_name:"{authorLastName}"~'
-    
+
     if aliveAfter is not None:
         aliveAfter = aliveAfter[:4]
         sub_q += f' AND year_of_death:[{aliveAfter} TO *]'
-    
+
     if aliveBefore is not None:
         aliveBefore = aliveBefore[:4]
         sub_q += f' AND year_of_birth:[* TO {aliveBefore}]'
-        
+
     final_q += sub_q[5:]
 
     return {
@@ -139,7 +141,6 @@ def make_query_advanced(
     }
 
 
-
 def make_query_quote(q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False):
 
     result = str((TextBlob(q)).correct())
@@ -149,6 +150,17 @@ def make_query_quote(q="", fl="*, [child]", rows=10, start=0, sort="score desc",
     else:
         final_q = 'content_type: "BOOK"' + \
             (" AND " + f'text:"{result}"~' if result else "")
+    print(final_q)
+
+    query = make_query_raw(
+        f"hl.fl=text&hl=true&indent=true&hl.tag.pre=<em><strong>&hl.tag.post=</strong></em>&q={final_q}")
+
+    docs = query['response']['docs']
+    print(query['highlighting'])
+    # add highlight field to each doc
+    for i in range(len(docs)):
+        if query['highlighting'][docs[i]['id']] and len(query['highlighting'][docs[i]['id']]['text']) > 0:
+            docs[i]['highlight'] = query['highlighting'][docs[i]['id']]['text'][0]
 
     return {
         "exact_query": exact,
@@ -156,7 +168,7 @@ def make_query_quote(q="", fl="*, [child]", rows=10, start=0, sort="score desc",
         "did_you_mean": result,
         "final_q": final_q,
         "quote": True,
-        "docs": make_query_raw(f"q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
+        "docs": docs,
     }
 
 
