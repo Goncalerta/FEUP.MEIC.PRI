@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { Box, CircularProgress, Container, Rating, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import StarIcon from "@mui/icons-material/Star";
@@ -12,7 +14,7 @@ function SearchResults(props) {
 
     const authorsToText = (authors) => {
         let val = authors || [];
-        if (typeof authors === "object") {
+        if (!Array.isArray(authors) && authors) {
             val = [authors];
         }
         const authorsList = val.map((author) => {
@@ -106,9 +108,29 @@ function SearchResults(props) {
 
     return (
         <Container sx={{ marginBottom: "3em", marginTop: "3em" }}>
-            {/* <Typography sx={{ fontSize: 34 }} color="text.secondary" gutterBottom>
-                Results
-            </Typography> */}
+            {!loading && !error && !data.exact_query && data.orig_query !== data.did_you_mean && (
+                <Container sx={{ marginBottom: "3em" }}>
+                    <Typography
+                        sx={{ fontSize: 34, margin: "0" }}
+                        color="text.secondary"
+                        gutterBottom
+                    >
+                        Did you mean &quot;{data.did_you_mean}&quot;?
+                    </Typography>
+                    <Typography
+                        sx={{ fontSize: 18, margin: "0" }}
+                        color="text.secondary"
+                        gutterBottom
+                    >
+                        Search for &quot;
+                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                        <a href="#" onClick={() => props.exactSearch(data)}>
+                            {data.orig_query}
+                        </a>
+                        &quot; instead.
+                    </Typography>
+                </Container>
+            )}
             {loading && (
                 <Box sx={{ display: "flex" }}>
                     <CircularProgress sx={{ marginLeft: "auto", marginRight: "auto" }} />
@@ -130,7 +152,7 @@ function SearchResults(props) {
                     </Typography>
                 </Box>
             )}
-            {!loading && !error && data.length === 0 && (
+            {!loading && !error && data.docs.length === 0 && (
                 <Box sx={{ display: "flex" }}>
                     <Typography
                         sx={{
@@ -156,6 +178,7 @@ SearchResults.propTypes = {
     error: PropTypes.bool.isRequired,
     data: PropTypes.object.isRequired /* eslint-disable-line react/forbid-prop-types */,
     moreLikeThis: PropTypes.func.isRequired,
+    exactSearch: PropTypes.func.isRequired,
 };
 
 export default SearchResults;

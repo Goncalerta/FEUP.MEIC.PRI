@@ -38,7 +38,7 @@ function Presentation() {
     const [searchResults, setSearchResults] = useState({
         first_load: true,
         loading: true,
-        data: [],
+        data: {},
         error: false,
     });
 
@@ -50,11 +50,30 @@ function Presentation() {
     };
 
     const onError = () => {
-        setSearchResults({ first_load: false, loading: false, data: [], error: true });
+        setSearchResults({ first_load: false, loading: false, data: {}, error: true });
     };
 
     const onStartSearch = () => {
-        setSearchResults({ first_load: false, loading: true, data: [], error: false });
+        setSearchResults({ first_load: false, loading: true, data: {}, error: false });
+    };
+
+    const exactSearch = async (query) => {
+        console.log(query);
+        onStartSearch();
+        api.get("search", {
+            params: {
+                value: query.orig_query,
+                exact_query: true,
+                // TODO advanced search fields
+            },
+        })
+            .then((response) => {
+                onSearch(response.data);
+            })
+            .catch((e) => {
+                console.log("Error", e);
+                onError();
+            });
     };
 
     const moreLikeThis = async (bookId) => {
@@ -134,6 +153,7 @@ function Presentation() {
                     loading={searchResults.loading}
                     error={searchResults.error}
                     moreLikeThis={moreLikeThis}
+                    exactSearch={exactSearch}
                 />
             </Card>
             <MKBox pt={6} px={1} mt={6}>

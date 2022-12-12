@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import Paper from "@mui/material/Paper";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import Collapse from "@mui/material/Collapse";
