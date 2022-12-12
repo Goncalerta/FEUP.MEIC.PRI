@@ -43,6 +43,10 @@ function SearchResults(props) {
             return `${name} (${year})`;
         });
 
+        if (authorsList.length === 0) {
+            return "Unknown";
+        }
+
         const lastAuthor = authorsList.pop();
         if (authorsList.length === 0) {
             return lastAuthor;

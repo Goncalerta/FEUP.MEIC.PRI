@@ -60,11 +60,9 @@ function Presentation() {
     const exactSearch = async (query) => {
         console.log(query);
         onStartSearch();
-        api.get("search", {
+        api.get("exactSearch", {
             params: {
-                value: query.orig_query,
-                exact_query: true,
-                // TODO advanced search fields
+                value: query.final_q,
             },
         })
             .then((response) => {

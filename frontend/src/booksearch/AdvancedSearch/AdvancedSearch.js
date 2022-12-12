@@ -81,8 +81,8 @@ function AdvancedSearch(props) {
                     document.getElementById("title").value !== ""
                         ? document.getElementById("title").value
                         : null,
-                releasedAfter: fromReleaseDate,
-                releasedBefore: toReleaseDate,
+                releasedAfter: fromReleaseDate ? fromReleaseDate.format() : null,
+                releasedBefore: toReleaseDate ? toReleaseDate.format() : null,
                 category:
                     document.getElementById("category").value !== ""
                         ? document.getElementById("category").value
@@ -111,8 +111,8 @@ function AdvancedSearch(props) {
                     document.getElementById("author-last-name").value !== ""
                         ? document.getElementById("author-last-name").value
                         : null,
-                aliveAfter: authorAliveBeginDate,
-                aliveBefore: authorAliveEndDate,
+                aliveAfter: authorAliveBeginDate ? authorAliveBeginDate.format() : null,
+                aliveBefore: authorAliveEndDate ? authorAliveEndDate.format() : null,
             },
         })
             .then((response) => {
@@ -207,6 +207,8 @@ function AdvancedSearch(props) {
                                 <DesktopDatePicker
                                     id="releasedAfter"
                                     label="Released after"
+                                    minDate={new Date("01/01/1000")}
+                                    maxDate={new Date("01/01/2100")}
                                     inputFormat="DD/MM/YYYY"
                                     value={fromReleaseDate}
                                     onChange={handleFromReleaseDate}
@@ -226,6 +228,8 @@ function AdvancedSearch(props) {
                                 <DesktopDatePicker
                                     id="releasedBefore"
                                     label="Released before"
+                                    minDate={new Date("01/01/1000")}
+                                    maxDate={new Date("01/01/2100")}
                                     inputFormat="DD/MM/YYYY"
                                     value={toReleaseDate}
                                     onChange={handleToReleaseDate}
@@ -342,6 +346,8 @@ function AdvancedSearch(props) {
                                     id="aliveAfter"
                                     label="Alive after"
                                     inputFormat="DD/MM/YYYY"
+                                    minDate={new Date("01/01/1000")}
+                                    maxDate={new Date("01/01/2100")}
                                     value={authorAliveBeginDate}
                                     onChange={handleAuthorAliveBeginDate}
                                     renderInput={(params) => (
@@ -361,6 +367,8 @@ function AdvancedSearch(props) {
                                     id="aliveBefore"
                                     label="Alive before"
                                     inputFormat="DD/MM/YYYY"
+                                    minDate={new Date("01/01/1000")}
+                                    maxDate={new Date("01/01/2100")}
                                     value={authorAliveEndDate}
                                     onChange={handleAuthorAliveEndDate}
                                     renderInput={(params) => (

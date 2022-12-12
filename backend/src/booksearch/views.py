@@ -2,7 +2,7 @@
 
 from rest_framework import viewsets
 from rest_framework.response import Response
-from src.booksearch.solr_api import make_query_basic, get_categories, get_book
+from src.booksearch.solr_api import make_query_basic, get_categories, get_book, make_query_advanced
 
 
 # class ExampleViewSet(viewsets.ViewSet):
@@ -31,6 +31,16 @@ class SearchViewSet(viewsets.ViewSet):
         value = data.get("value", "")
         exact = data.get("exact_query", False)
         return Response(make_query_basic(q=value, rows=10, start=0, exact=exact))
+
+class ExactSearchViewSet(viewsets.ViewSet):
+    """
+    Viewset for searching books.
+    """
+
+    def list(self, request):
+        data = request.query_params
+        value = data.get("value", "")
+        return Response(make_query_exact(finalq=value, rows=10, start=0))
 
 class AdvancedSearchViewSet(viewsets.ViewSet):
     """

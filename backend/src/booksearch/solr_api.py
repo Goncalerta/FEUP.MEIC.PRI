@@ -13,8 +13,6 @@ def make_query_raw(query):
 
 
 def make_query_basic(q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False):
-    # TODO this function probably should be improved to handle more complex queries
-    #      and we could even create more highlevel wrappers as needed
     fields = ["title", "subjects", "text"]
     final_q = 'content_type: "BOOK"'
     result = ""
@@ -37,16 +35,104 @@ def make_query_basic(q="", fl="*, [child]", rows=10, start=0, sort="score desc",
     return {
         "exact_query": exact,
         "orig_query": q,
+        "final_q": final_q,
         "did_you_mean": result.strip(),
         "docs": make_query_raw(f"q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
+    }
+
+def make_query_exact(finalq, fl="*, [child]", rows=10, start=0, sort="score desc", exact=True):
+    return {
+        "exact_query": exact,
+        "orig_query": finalq,
+        "final_q": finalq,
+        "did_you_mean": finalq,
+        "docs": make_query_raw(f"q={finalq}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
     }
 
 def make_query_advanced(
     q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False, title="", releasedAfter="", releasedBefore="",
     category="", ratingMin="", ratingMax="", minNumRating="", maxNumRating="", authorFirstName="", authorLastName="", aliveAfter="", aliveBefore=""):
-    # if title != "":
-    #     q += " AND title:" + title
-    pass
+    fields = ["title", "subjects", "text"]
+    final_q = 'content_type: "BOOK"'
+    result = ""
+
+    def boost(field):
+        if field == "title":
+            return 1
+        if field == "subjects":
+            return 1.5
+        if field == "text":
+            return 1
+
+    if q is not None:
+        for keyword in q.split():
+            keyword_did_you_mean = keyword if exact else str(
+                (TextBlob(keyword)).correct())
+            result += keyword_did_you_mean + " "
+            final_q += " AND (" + (" OR ").join([
+                f'({field}:"{keyword_did_you_mean}"~)^{boost(field)}' for field in fields]) + ")"
+    else:
+        q = ""
+        result = ""
+
+    if title is not None:
+        final_q += f' AND title:"{title}"~'
+    if category is not None:
+        final_q += f' AND subjects:"{category}"~'
+    if ratingMin is not None and ratingMax is not None:
+        final_q += f' AND rating:[{ratingMin} TO {ratingMax}]'
+    elif ratingMin is not None:
+        final_q += f' AND rating:[{ratingMin} TO *]'
+    elif ratingMax is not None:
+        final_q += f' AND rating:[* TO {ratingMax}]'
+    
+    if minNumRating is not None and maxNumRating is not None:
+        final_q += f' AND num_ratings:[{minNumRating} TO {maxNumRating}]'
+    elif minNumRating is not None:
+        final_q += f' AND num_ratings:[{minNumRating} TO *]'
+    elif maxNumRating is not None:
+        final_q += f' AND num_ratings:[* TO {maxNumRating}]'
+    
+    if releasedAfter is not None:
+        releasedAfter = releasedAfter[:19] + 'Z'
+    if releasedBefore is not None:
+        releasedBefore = releasedBefore[:19] + 'Z'
+
+    if releasedAfter is not None and releasedBefore is not None:
+        final_q += f' AND release_date:[{releasedAfter} TO {releasedBefore}]'
+    elif releasedAfter is not None:
+        final_q += f' AND release_date:[{releasedAfter} TO *]'
+    elif releasedBefore is not None:
+        final_q += f' AND release_date:[* TO {releasedBefore}]'
+    
+    if authorFirstName is not None or authorLastName is not None or aliveAfter is not None or aliveBefore is not None:
+        final_q = final_q.replace('"', '\\"')
+        final_q = '{' + f'!parent which="{final_q}"' + '}'
+    
+    sub_q = ''
+    if authorFirstName is not None:
+        sub_q += f' AND first_name:"{authorFirstName}"~'
+    
+    if authorLastName is not None:
+        sub_q += f' AND last_name:"{authorLastName}"~'
+    
+    if aliveAfter is not None:
+        aliveAfter = aliveAfter[:4]
+        sub_q += f' AND year_of_death:[{aliveAfter} TO *]'
+    
+    if aliveBefore is not None:
+        aliveBefore = aliveBefore[:4]
+        sub_q += f' AND year_of_birth:[* TO {aliveBefore}]'
+        
+    final_q += sub_q[5:]
+
+    return {
+        "exact_query": exact,
+        "orig_query": q,
+        "final_q": final_q,
+        "did_you_mean": result.strip(),
+        "docs": make_query_raw(f"q={final_q}&fl={fl}&rows={rows}&start={start}&sort={sort}")['response']['docs']
+    }
 
 def make_query_quote(q="", fl="*, [child]", rows=10, start=0, sort="score desc", exact=False):
 
