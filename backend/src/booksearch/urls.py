@@ -3,10 +3,11 @@
 from rest_framework import routers
 from django.urls import include, path
 
-from src.booksearch.views import BookViewSet, SearchViewSet, BrowseViewSet, CategoriesViewSet
+from src.booksearch.views import BookViewSet, SearchViewSet, BrowseViewSet, CategoriesViewSet, AdvancedSearchViewSet
 
 router = routers.DefaultRouter()
 router.register(r"search", SearchViewSet, basename="search")
+router.register(r"advancedSearch", SearchViewSet, basename="advancedSearch")
 router.register(r"browse", BrowseViewSet, basename="browse")
 router.register(r"categories", CategoriesViewSet, basename="categories")
 router.register(r"book", BookViewSet, basename="book")
