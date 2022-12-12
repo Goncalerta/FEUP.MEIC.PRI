@@ -109,12 +109,12 @@ function SearchResults(props) {
             </Box>
             {
                 book?.highlight && (
-                    <Card sx={{ padding:"2em", margin:"0.5em"}}>
+                    <Card sx={{ padding:"1.2em", margin:"0.5em", marginTop:"1em", width:"auto"}}>
                 <Typography
                         sx={{ fontSize: 14}}
                         color="text.secondary"
                         gutterBottom
-                        dangerouslySetInnerHTML={{ __html: `...${book.highlight}...` }}
+                        dangerouslySetInnerHTML={{ __html: `...<em>${book.highlight}</em>...` }}
                     >
                 </Typography>
             </Card>)

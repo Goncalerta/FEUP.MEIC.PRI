@@ -153,7 +153,7 @@ def make_query_quote(q="", fl="*, [child]", rows=10, start=0, sort="score desc",
     print(final_q)
 
     query = make_query_raw(
-        f"hl.fl=text&hl=true&indent=true&hl.tag.pre=<em><strong>&hl.tag.post=</strong></em>&q={final_q}")
+        f"hl.fl=text&hl=true&indent=true&hl.simple.pre=<strong>&hl.simple.post=</strong>&q={final_q}")
 
     docs = query['response']['docs']
     print(query['highlighting'])
